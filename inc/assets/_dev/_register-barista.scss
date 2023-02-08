@@ -1,0 +1,46 @@
+.__lt-register-barista {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    max-width: 800px;
+    margin: auto;
+
+    .__lt-inner-register {
+        @extend %ajax-loading;
+    }
+
+    .__ltrg-top {
+        max-width: 600px;
+        margin: auto auto 30px;
+
+        .__active-code label {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            grid-gap: 30px;
+
+            span {
+                font-weight: 600;
+                font-size: 16px;
+            }
+
+            input {
+                @extend %input-style;
+            }
+        }
+    }
+
+    .__ltrg-content {
+        .__ltrg-inner {
+            .__lt-btn-register {
+                @extend %button-style;
+                display: block;
+                margin: auto;
+
+                &:disabled {
+                    opacity: .5;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "inc",
+  "version": "1.0.0",
+  "browser": "./assets/js/lt-main.min.js",
+  "css": "./assets/css/lt-main.min.css",
+  "targets": {
+    "css": {
+      "source": "./assets/_dev/lt-main.scss",
+      "optimize": true
+    },
+    "browser": {
+      "source": "./assets/_dev/lt-main.js",
+      "optimize": true,
+      "includeNodeModules": ["@swc/helpers","tslib"]
+    }
+  },
+  "license": "MIT",
+  "browserslist": "> 0.25%, last 4 versions, not dead",
+  "scripts": {
+    "start": "parcel",
+    "b": "parcel build --no-source-maps --no-cache",
+    "w": "parcel watch --no-source-maps --no-cache"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "2.8.2",
+    "bootstrap-scss": "^5.2.3",
+    "parcel": "^2.8.2"
+  },
+  "dependencies": {
+    "@swc/helpers": "^0.4.14"
+  }
+}

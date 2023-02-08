@@ -1,0 +1,23 @@
+.__lt-create-job {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    max-width: 800px;
+    margin: auto;
+    .__lt-inner-create-job {
+        @extend %ajax-loading;
+    }
+    .__ltrg-content {
+        .__ltrg-inner {
+            .__lt-btn-create {
+                @extend %button-style;
+                display: block;
+                margin: auto;
+
+                &:disabled {
+                    opacity: .5;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+}

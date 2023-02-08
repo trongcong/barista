@@ -1,0 +1,344 @@
+{
+    "key": "group_625cef11cef8a",
+    "title": "Baristas",
+    "fields": [
+        {
+            "key": "field_625cef2b13c9c",
+            "label": "Full Name",
+            "name": "full_name",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "frontend_admin_display_mode": "edit",
+            "only_front": 0,
+            "readonly": 0,
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_625cef7b13c9d",
+            "label": "Preferred Name",
+            "name": "preferred_name",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "frontend_admin_display_mode": "edit",
+            "only_front": 0,
+            "readonly": 0,
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_625cefe813c9e",
+            "label": "Years Of Experience",
+            "name": "years_of_experience",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0.5": "Less Than 1 Year",
+                "1": "More Than 1 Year",
+                "2": "More Than 2 Years",
+                "3": "More Than 3 Years"
+            },
+            "default_value": false,
+            "return_format": "array",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_625ceff513c9f",
+            "label": "Experience in Australia",
+            "name": "experience_in_australia",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0.5": "Less Than 1 Year",
+                "1": "More Than 1 Year",
+                "2": "More Than 2 Years",
+                "3": "More Than 3 Years"
+            },
+            "default_value": false,
+            "return_format": "array",
+            "multiple": 0,
+            "allow_null": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_625cf654af1dc",
+            "label": "Barista Skills",
+            "name": "barista_skills",
+            "aria-label": "",
+            "type": "checkbox",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "frontend_admin_display_mode": "edit",
+            "only_front": 0,
+            "choices": {
+                "Prepare Australian coffees": "Prepare Australian coffees",
+                "Extraction\/ Dial-in": "Extraction\/ Dial-in",
+                "Cleaning and maintenance": "Cleaning and maintenance",
+                "Basic latte art (heart, tulip or rosetta)": "Basic latte art (heart, tulip or rosetta)",
+                "Alternative brewing": "Alternative brewing",
+                "Advanced latte art (signature designs)": "Advanced latte art (signature designs)",
+                "Being able to talk about coffee": "Being able to talk about coffee"
+            },
+            "allow_custom": 0,
+            "default_value": [],
+            "layout": "vertical",
+            "toggle": 0,
+            "return_format": "value",
+            "save_custom": 0
+        },
+        {
+            "key": "field_62887394b3a58",
+            "label": "Volume You Are Able To Handle Solo",
+            "name": "volume_you_are_able_to_handle_solo",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "frontend_admin_display_mode": "edit",
+            "only_front": 0,
+            "choices": {
+                "Less than 3 kgs": "Less than 3 kgs",
+                "More than 3 kgs": "More than 3 kgs",
+                "More than 4 kgs": "More than 4 kgs",
+                "More than 5 kgs": "More than 5 kgs",
+                "More than 6 kgs": "More than 6 kgs",
+                "More than 7 kgs": "More than 7 kgs",
+                "More than 8 kgs": "More than 8 kgs"
+            },
+            "default_value": false,
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 0,
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_625cf65daf1de",
+            "label": "Hospitality Skills",
+            "name": "hospitality_skills",
+            "aria-label": "",
+            "type": "checkbox",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "frontend_admin_display_mode": "edit",
+            "only_front": 0,
+            "choices": {
+                "POS": "POS",
+                "Handling transactions": "Handling transactions",
+                "Waitering": "Waitering",
+                "Preparing light food": "Preparing light food",
+                "Preparing cold drinks": "Preparing cold drinks",
+                "Cleaning": "Cleaning"
+            },
+            "allow_custom": 0,
+            "default_value": [],
+            "layout": "vertical",
+            "toggle": 0,
+            "return_format": "value",
+            "save_custom": 0
+        },
+        {
+            "key": "field_63dbe57fde4a3",
+            "label": "Your Phone Number",
+            "name": "your_phone_number",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_63dbe635de4a5",
+            "label": "Upload Your Video (Youtube link)",
+            "name": "upload_your_video",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": ""
+        },
+        {
+            "key": "field_625cf65faf1df",
+            "label": "Describe Yourself In 2 Sentences",
+            "name": "describe_yourself_in_2_sentences",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": 150,
+            "rows": "",
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_63dbe5eede4a4",
+            "label": "Your Email (Optional)",
+            "name": "your_email",
+            "aria-label": "",
+            "type": "email",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_625cf662af1e0",
+            "label": "Your Resume (Optional)",
+            "name": "your_resume",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "Please make sure your link is open to public.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_63dd1fe7455e0",
+            "label": "Your Avatar (Optional)",
+            "name": "your_avatar",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Please make sure your link is open to public.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "barista"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1675575255
+}

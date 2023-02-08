@@ -1,0 +1,32 @@
+@import "~bootstrap-scss/functions";
+@import "~bootstrap-scss/variables";
+@import "~bootstrap-scss/mixins";
+
+@import "mixins";
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+@import "range-slider";
+@import "listings";
+@import "register-barista";
+@import "single";
+@import "create-jobs";
+
+form textarea {
+    background: #fff;
+}
+
+//.single-barista,
+.page-template-page-create-jobs,
+    //.page-template-page-listings,
+.page-template-page-register-barista {
+    #main {
+        background-image: url(../../../images/right-main-shape.png);
+        background-repeat: no-repeat;
+        background-position: right 400px;
+        background-size: auto;
+        @include media-breakpoint-down(md) {
+            background-position: right center;
+        }
+    }
+}
