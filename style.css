@@ -39,10 +39,11 @@ body{
     top: 6px;
 }
 header#site-header{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+	position: absolute;
+	top: 0;
+	background-color: rgba(0,0,0,0);
+	height: auto;
+	z-index: 9999;
 }
 header#site-header .hfe-nav-menu > li {
     margin: 0 21px;
@@ -1018,7 +1019,7 @@ header#site-header .hfe-nav-menu > li {
     border: 3px solid #6e9817;
 }
 #main .pricing_table_inner_box .ue-card:hover .ue-card-header,#main .pricing_table_inner_box.active .ue-card .ue-card-header{
-    background-color: #341506;    
+    background-color: #341506;
 }
 #main .pricing_table_inner_box .ue-card:hover .ue-card-header .ue-card-title,#main .pricing_table_inner_box.active .ue-card .ue-card-header .ue-card-title{
     color: #fff;
@@ -1504,7 +1505,7 @@ body.job_hunting_page header#site-header .elementor-button-wrapper a:hover {
 @media (min-width: 1025px) and (max-width: 1599px){
     body #main .job_hunting_main_sec > .elementor-container {
         /*max-width: 1000px;*/
-    }    
+    }
 	.rating_info .rating_icon {
 	    max-width: 19px;
 	}
@@ -1546,7 +1547,7 @@ body.job_hunting_page header#site-header .elementor-button-wrapper a:hover {
     }
     body #main .job_hunting_main_sec h1 {
         font-size: 45px;
-    }    
+    }
     body #main .job_hunting_main_sec h2 {
         font-size: 20px;
     }
@@ -1933,7 +1934,7 @@ body.job_hunting_page header#site-header .elementor-button-wrapper a:hover {
         left: 1%;
         width: 60px;
         height: 49px;
-    } 
+    }
     .team_slider .owl-stage .item {
 	    padding: 0 5px;
 	}
@@ -1963,7 +1964,7 @@ body.job_hunting_page header#site-header .elementor-button-wrapper a:hover {
     body #main .rating_box {
 	    right: 190px;
 	    bottom: 18%;
-	}    
+	}
 	body #main .job_hunting_main_sec .rating_box {
 	    bottom: 19%;
 	}
@@ -2045,7 +2046,7 @@ body.job_hunting_page header#site-header .elementor-button-wrapper a:hover {
 	    bottom: unset;
 	    top: auto;
 	}
-	.meet_shot_slider_sec.meet_slider:before {		
+	.meet_shot_slider_sec.meet_slider:before {
 	    top: 80%;
 	    width: 350px;
 	    height: 880px;
@@ -2180,4 +2181,11 @@ body.job_hunting_page header#site-header .elementor-button-wrapper a:hover {
 	    -moz-box-shadow: 0px 8px 5px 0px rgba(52, 21, 6, 0.08);
 	    -webkit-box-shadow: 0px 8px 5px 0px rgb(52 21 6 / 8%);
 	}
+}
+
+.single-barista header#site-header,
+.page-template-page-create-jobs header#site-header,
+.page-template-page-listings header#site-header,
+.page-template-page-register-barista header#site-header {
+	position: relative;
 }
