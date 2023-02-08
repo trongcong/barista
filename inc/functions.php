@@ -4,10 +4,10 @@
  */
 add_action( 'wp_enqueue_scripts', 'lt_enqueue_scripts' );
 function lt_enqueue_scripts() {
-	wp_enqueue_style( 'lt-style', get_stylesheet_directory_uri() . '/inc/assets/css/lt-main.min.css', array(), WP_DEBUG ? rand() : "1.0" );
+	wp_enqueue_style( 'lt-style', get_stylesheet_directory_uri() . '/inc/assets/css/lt-main.min.css', array(), WP_DEBUG ? rand() : "1.1" );
 	wp_enqueue_script( 'lt-script', get_stylesheet_directory_uri() . '/inc/assets/js/lt-main.min.js', array(
 		'jquery',
-	), WP_DEBUG ? rand() : "1.0", true );
+	), WP_DEBUG ? rand() : "1.1", true );
 
 	wp_localize_script( 'lt-script', 'ajax_data', [
 		'admin_logged' => in_array( 'administrator', wp_get_current_user()->roles ) ? 'yes' : 'no',
@@ -387,7 +387,6 @@ function get_number_of_days_from_date_to_now( $from ) {
 	return round( $date_diff / ( 60 * 60 * 24 ) );
 }
 
-
 function lt_filter_group() {
 	$barista_skills     = acf_get_field( "field_625cf654af1dc" )["choices"];
 	$volumes            = acf_get_field( "field_62887394b3a58" )["choices"];
@@ -478,6 +477,30 @@ function lt_filter_group() {
                     </label>
                 </div>
             <?php } ?>
+        </div>
+    </div>
+	<?php
+}
+
+function lt_filter_modal() {?>
+    <div class="__lt-filter-modal" style="display: none">
+        <div class="__lt-modal-backdrop"></div>
+        <div class="__filter-popup-content">
+            <div class="__filter-popup-inner">
+                <div class="__lt-by"><span>Filter by<span class="__counter-result"></span></span>
+                    <button type="button" class="__lt-modal-close">
+                        <span class="sr-only">Close the dialog</span>
+                        <span class="up-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 14 14" role="img">
+                                <polygon fill-rule="evenodd" points="12.524 0 7 5.524 1.476 0 0 1.476 5.524 7 0 12.524 1.476 14 7 8.476 12.524 14 14 12.524 8.476 7 14 1.476"></polygon>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+                <div class="__filter-popup-group">
+                    <?php lt_filter_group() ?>
+                </div>
+            </div>
         </div>
     </div>
 	<?php

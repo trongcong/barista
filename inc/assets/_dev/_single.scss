@@ -79,10 +79,11 @@
                         display: grid;
                         grid-template-columns: 1fr 1fr;
                         grid-gap: 10px;
+                        font-size: 18px;
 
                         > a {
                             font-weight: 600;
-                            text-align: right;
+                            text-align: left;
                         }
                     }
                 }

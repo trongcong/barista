@@ -58,136 +58,155 @@ jQuery(function ($) {
         return true
     }
 
+    const countFilter = ({
+                             training_certification, barista_skills, volumes, hospitality_skills,
+                             year_exp_min, year_exp_max, year_exp_aus_min, year_exp_aus_max
+                         }) => {
+        let counter = 0;
+        if (training_certification.length) counter += 1
+        if (barista_skills.length) counter += 1
+        if (volumes.length) counter += 1
+        if (hospitality_skills.length) counter += 1
+        if (year_exp_min > 0.5 || year_exp_max < 10) counter += 1
+        if (year_exp_aus_min > 0.5 || year_exp_aus_max < 10) counter += 1
+        return counter;
+    };
+
+    const __ajaxFilterBarista = async ({...object}, $wrap, classAddLoading) => {
+        const {
+            training_certification,
+            barista_skills,
+            volumes,
+            hospitality_skills,
+            year_exp_min,
+            year_exp_max,
+            year_exp_aus_min,
+            year_exp_aus_max,
+        } = object;
+        $wrap.data("object-filter", JSON.stringify(object))
+
+        __addAjaxLoading($wrap, classAddLoading)
+        scrollToElement($wrap)
+        try {
+            const {items, count} = await $.ajax({
+                type: "post",
+                url: ajax_data.ajax_url,
+                dataType: 'json',
+                data: {
+                    action: 'lt_ajax_filter_barista',
+                    security: ajax_data._ajax_nonce,
+                    training_certification, barista_skills, volumes,
+                    hospitality_skills,
+                    year_exp_min: year_exp_min > year_exp_max ? year_exp_max : year_exp_min,
+                    year_exp_max: year_exp_min > year_exp_max ? year_exp_min : year_exp_max,
+                    year_exp_aus_min: year_exp_aus_min > year_exp_aus_max ? year_exp_aus_max : year_exp_aus_min,
+                    year_exp_aus_max: year_exp_aus_min > year_exp_aus_max ? year_exp_aus_min : year_exp_aus_max,
+                },
+            });
+
+            $wrap.find(".__lt-items-wrap").html(items)
+            $(".__counter-result").text(`(${count} barista${count > 1 ? "s" : ""})`)
+            __removeAjaxLoading($wrap, classAddLoading)
+        } catch (e) {
+            console.error(e)
+            __removeAjaxLoading($wrap, classAddLoading)
+        }
+    }
+
+    const __getDataFilter = ($wrap) => {
+        const $checkBoxCer = $wrap.find(`.__lt-checkbox input[name="training_certification[]"]:checked`),
+            $checkBoxBaristaSkills = $wrap.find(`.__lt-checkbox input[name="barista_skills[]"]:checked`),
+            $checkBoxVolumes = $wrap.find(`.__lt-checkbox input[name="volumes[]"]:checked`),
+            $checkBoxHospitalitySkills = $wrap.find(`.__lt-checkbox input[name="hospitality_skills[]"]:checked`),
+            $yearExpMin = $wrap.find(`input[name="year_exp_min"]`),
+            $yearExpMax = $wrap.find(`input[name="year_exp_max"]`),
+            $yearExpAusMin = $wrap.find(`input[name="year_exp_aus_min"]`),
+            $yearExpAusMax = $wrap.find(`input[name="year_exp_aus_max"]`)
+        ;
+        const training_certification = $checkBoxCer.map((_, el) => $(el).val().trim()).get();
+        const barista_skills = $checkBoxBaristaSkills.map((_, el) => $(el).val()).get();
+        const volumes = $checkBoxVolumes.map((_, el) => $(el).val()).get();
+        const hospitality_skills = $checkBoxHospitalitySkills.map((_, el) => $(el).val()).get();
+        const year_exp_min = +$yearExpMin.val() || 0;
+        const year_exp_max = +$yearExpMax.val() || 10;
+        const year_exp_aus_min = +$yearExpAusMin.val() || 0;
+        const year_exp_aus_max = +$yearExpAusMax.val() || 10;
+
+        return {
+            training_certification,
+            barista_skills,
+            volumes, hospitality_skills,
+            year_exp_min,
+            year_exp_max,
+            year_exp_aus_min,
+            year_exp_aus_max,
+        }
+    }
+
+    const setCounterButtonFilter = ($wrap, $open) => {
+        const object_filter = $wrap.data("object-filter");
+        if (object_filter) {
+            const parseObjectFilter = JSON.parse(object_filter)
+            const counter = countFilter({...parseObjectFilter});
+            $open.find("span:nth-child(1)").html(counter ? `<span class="filters-counter">${counter}</span>` : "")
+        }
+    };
+
     const FilterBarista = () => {
         const $wrap = $(".__listings-wrap"),
+            $wrapModal = $(".__lt-filter-modal"),
             $open = $wrap.find(".__show-filter-popup"),
             $checkBox = $wrap.find(`.__lt-checkbox input[type="checkbox"]`),
             $inputsNumber = $wrap.find(`.__lt-input input[type="number"]`),
             $inputsRange = $wrap.find(`.__lt-range-slider input[type="range"]`),
+
+            $checkBoxModal = $wrapModal.find(`.__lt-checkbox input[type="checkbox"]`),
+            $inputsNumberModal = $wrapModal.find(`.__lt-input input[type="number"]`),
+            $inputsRangeModal = $wrapModal.find(`.__lt-range-slider input[type="range"]`),
             classAddLoading = ".__lt-inner-wrap"
         ;
 
-        const countFilter = ({
-                                 training_certification,
-                                 barista_skills,
-                                 volumes,
-                                 hospitality_skills,
-                                 year_exp_min,
-                                 year_exp_max,
-                                 year_exp_aus_min,
-                                 year_exp_aus_max
-                             }) => {
-            let counter = 0;
-            if (training_certification.length) counter += 1
-            if (barista_skills.length) counter += 1
-            if (volumes.length) counter += 1
-            if (hospitality_skills.length) counter += 1
-            if (year_exp_min > 0.5 || year_exp_max < 10) counter += 1
-            if (year_exp_aus_min > 0.5 || year_exp_aus_max < 10) counter += 1
-            return counter;
-        };
-        const getData = (element) => {
-            const $checkBoxCer = $wrap.find(`.__lt-checkbox input[name="training_certification[]"]:checked`),
-                $checkBoxBaristaSkills = $wrap.find(`.__lt-checkbox input[name="barista_skills[]"]:checked`),
-                $checkBoxVolumes = $wrap.find(`.__lt-checkbox input[name="volumes[]"]:checked`),
-                $checkBoxHospitalitySkills = $wrap.find(`.__lt-checkbox input[name="hospitality_skills[]"]:checked`),
-                $yearExpMin = $wrap.find(`input[name="year_exp_min"]`),
-                $yearExpMax = $wrap.find(`input[name="year_exp_max"]`),
-                $yearExpAusMin = $wrap.find(`input[name="year_exp_aus_min"]`),
-                $yearExpAusMax = $wrap.find(`input[name="year_exp_aus_max"]`)
-            ;
-            const training_certification = $checkBoxCer.map((_, el) => $(el).val().trim()).get();
-            const barista_skills = $checkBoxBaristaSkills.map((_, el) => $(el).val()).get();
-            const volumes = $checkBoxVolumes.map((_, el) => $(el).val()).get();
-            const hospitality_skills = $checkBoxHospitalitySkills.map((_, el) => $(el).val()).get();
-            const year_exp_min = +$yearExpMin.val() || 0;
-            const year_exp_max = +$yearExpMax.val() || 10;
-            const year_exp_aus_min = +$yearExpAusMin.val() || 0;
-            const year_exp_aus_max = +$yearExpAusMax.val() || 10;
-
-            return {
-                training_certification,
-                barista_skills,
-                volumes, hospitality_skills,
-                year_exp_min,
-                year_exp_max,
-                year_exp_aus_min,
-                year_exp_aus_max,
-            }
-        }
-        const __ajax = async ({
-                                  training_certification,
-                                  barista_skills,
-                                  volumes,
-                                  hospitality_skills,
-                                  year_exp_min,
-                                  year_exp_max,
-                                  year_exp_aus_min,
-                                  year_exp_aus_max,
-                              }) => {
-            __addAjaxLoading($wrap, classAddLoading)
-            scrollToElement($wrap)
-            try {
-                const {items, ...data} = await $.ajax({
-                    type: "post",
-                    url: ajax_data.ajax_url,
-                    dataType: 'json',
-                    data: {
-                        action: 'lt_ajax_filter_barista',
-                        security: ajax_data._ajax_nonce,
-                        training_certification, barista_skills, volumes,
-                        hospitality_skills,
-                        year_exp_min: year_exp_min > year_exp_max ? year_exp_max : year_exp_min,
-                        year_exp_max: year_exp_min > year_exp_max ? year_exp_min : year_exp_max,
-                        year_exp_aus_min: year_exp_aus_min > year_exp_aus_max ? year_exp_aus_max : year_exp_aus_min,
-                        year_exp_aus_max: year_exp_aus_min > year_exp_aus_max ? year_exp_aus_min : year_exp_aus_max,
-                    },
-                });
-                //console.log(data)
-                $wrap.find(".__lt-items-wrap").html(items)
-                __removeAjaxLoading($wrap, classAddLoading)
-            } catch (e) {
-                console.error(e)
-                __removeAjaxLoading($wrap, classAddLoading)
-            }
-        }
-        let a = {};
-        let b = []
         $checkBox.add($inputsNumber).add($inputsRange).on("change", function (e) {
-            b.push((this.value));
-            a[this.name] = b;
-            console.log(this, a);
+            __ajaxFilterBarista(__getDataFilter($wrap), $wrap, classAddLoading);
+            setCounterButtonFilter($wrap, $open);
+            renderDataFilter();
+        })
 
-            __ajax(getData(this));
+        $checkBoxModal.add($inputsNumberModal).add($inputsRangeModal).on("change", function (e) {
+            __ajaxFilterBarista(__getDataFilter($wrapModal), $wrap, classAddLoading);
+            setCounterButtonFilter($wrap, $open);
+            renderDataFilter();
+        })
+    }
 
-            $wrap.data("object-filter", JSON.stringify(getData(this)))
+    const renderDataFilter = () => {
+        const $wrap = $(".__listings-wrap");
+        const object_filter = $wrap.data("object-filter");
+        if (!object_filter) return;
 
-            const object_filter = $wrap.data("object-filter");
-            if (object_filter) {
-                const parseObjectFilter = JSON.parse(object_filter)
-                //console.log(object_filter, parseObjectFilter, {...parseObjectFilter})
-
-                const counter = countFilter({...parseObjectFilter});
-                console.log(counter)
-                $open.find("span:nth-child(1)").html(counter ? `<span class="filters-counter">${counter}</span>` : "")
-
-                for (const prop in parseObjectFilter) {
-                    if (parseObjectFilter.hasOwnProperty(prop)) {
-                        console.log(prop, parseObjectFilter[prop])
-                        if (typeof parseObjectFilter[prop] === "number" || typeof parseObjectFilter[prop] === "string") {
-                            $(prop).val(parseObjectFilter[prop])
+        const parseObjectFilter = JSON.parse(object_filter)
+        console.log(parseObjectFilter)
+        for (const prop in parseObjectFilter) {
+            if (parseObjectFilter.hasOwnProperty(prop)) {
+                const values = parseObjectFilter[prop]
+                if (typeof values === "number" || typeof values === "string") {
+                    const $element = $(`[name="${prop}"]`);
+                    $element.val(parseObjectFilter[prop])
+                    if ($element.attr("type") === "range") {
+                        $element.trigger("input")
+                    }
+                }
+                if (Array.isArray(values)) {
+                    if (values.length) {
+                        for (const v of values) {
+                            $(`[name="${prop}[]"][value='${v}']`).prop('checked', true)
                         }
-                        if (typeof parseObjectFilter[prop] === "object") {
-
-                        }
+                    } else {
+                        $(`[name="${prop}[]"]`).prop('checked', false)
                     }
                 }
             }
-        })
-
-        $open.on('click', function (e) {
-            $(this).parents(".__listings-wrap").find(".__lt-filter-modal").show()
-        })
+        }
     }
 
     const HandleModal = () => {
@@ -201,6 +220,9 @@ jQuery(function ($) {
         })
         $content.on('click', function (e) {
             if ($(e.target).hasClass('__filter-popup-content')) $(this).parents(".__lt-filter-modal").hide()
+        })
+        $open.on('click', function (e) {
+            $(document).find(".__lt-filter-modal").show()
         })
     }
 
