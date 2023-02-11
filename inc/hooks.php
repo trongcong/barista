@@ -37,8 +37,8 @@ function filter_ocean_display_page_header( $return ) {
 	return $return;
 }
 
-add_action( "ocean_before_content_wrap", "add_action_ocean_before_content_wrap", 20 );
-function add_action_ocean_before_content_wrap() {
+//add_action( "ocean_before_content_wrap", "add_action_ocean_before_content_wrap", 20 );
+function lt_add_page_header( $title ) {
 	if ( is_singular( "barista" ) ) { ?>
         <header class="page-header background-image-page-header hide-all-devices" style="
             background-image: url(https://firstshotbaristatraining.com.au/wp-content/uploads/2019/05/cover.jpg);
@@ -46,7 +46,7 @@ function add_action_ocean_before_content_wrap() {
         ">
             <div class="container clr page-header-inner">
                 <h1 class="page-header-title clr" itemprop="headline">
-                <span class="__thanks">THANK YOU FOR SEEING MY PROFILE</span>
+                <span class="__thanks"><?= $title ?></span>
                 </h1>
             </div>
             <span class="background-image-page-header-overlay"></span>
@@ -109,7 +109,7 @@ function lt_ajax_filter_barista() {
 	}
 	$items = ob_get_clean();
 	$items = empty( $items ) ? $not_found : $items;
-//sleep(100);
+	//sleep(100);
 	wp_send_json( [
 		"items"       => $items,
 		"count"       => $i,
@@ -271,4 +271,34 @@ function lt_ajax_contact_action() {
 	] );
 
 	wp_die();
+}
+
+add_action( 'acf/save_post', 'update_barista' );
+function update_barista( $post_id ) {
+	if ( get_post_type( $post_id ) !== 'barista' || is_admin() ) {
+		return;
+	}
+
+	$post_update = [
+		'post_title'   => wp_strip_all_tags( get_field( "full_name" ) ),
+		'post_content' => get_field( "describe_yourself_in_2_sentences" ),
+	];
+	wp_update_post( $post_update );
+}
+
+add_action( 'wp_footer', 'lt_cta_contact' );
+function lt_cta_contact() {
+	if ( is_single() && get_post_type() === "barista" ) { ?>
+        <div class="__cta __contact-item">
+            <a href="tel:0123456">
+                <span>Contact me</span>
+                <span class="__svg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                      <path fill-rule="evenodd" d="M3.6 7.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V17c0 .6-.4 1-1 1C7.6 18 0 10.4 0 1c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1L3.6 7.8Z"/>
+                    </svg>
+                </span>
+            </a>
+        </div>
+		<?php
+	}
 }

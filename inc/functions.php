@@ -48,13 +48,13 @@ function get_lt_item( $id ) {
                 </div>
                 <div class="__item-meta">
                     <div class="__num-exp">
-                        Years of experience: <strong><?= get_field( "years_of_experience", $id )['value'] ?></strong>
+                        Barista Experience (Years): <strong><?= get_field( "years_of_experience", $id )['value'] ?></strong>
                     </div>
                     <div class="__viewed">
                         Viewed: <strong><?= get_barista_view( $id ) ?></strong>
                     </div>
                     <div class="__num-exp-aus">
-                        Experience in Australia: <strong><?= get_field( "experience_in_australia", $id )['value'] ?></strong>
+                        Retail or Hospitality Experience: <strong><?= get_field( "experience_in_australia", $id )['value'] ?></strong>
                     </div>
                     <div class="__contacted">
                         Contacted: <strong><?= get_barista_contacted( $id ) ?></strong>
@@ -417,7 +417,7 @@ function lt_filter_group() {
     </div>
 
     <div class="__lt-filter-group">
-        <h4 class="__lt-filter-title">Years of experience</h4>
+        <h4 class="__lt-filter-title">Barista Experience (Years)</h4>
         <div class="__lt-range-slider">
           <input name="year_exp_min" type="range" min="0.5" max="10" step="0.5" value="0.5" class="__lt-range-slider__input" />
           <input name="year_exp_max" type="range" min="0.5" max="10" step="0.5" value="10" class="__lt-range-slider__input" />
@@ -428,7 +428,7 @@ function lt_filter_group() {
     </div>
 
     <div class="__lt-filter-group">
-        <h4 class="__lt-filter-title">Experience in Australia </h4>
+        <h4 class="__lt-filter-title">Retail or Hospitality Experience</h4>
         <div class="__lt-range-slider">
           <input name="year_exp_aus_min" type="range" min="0.5" max="10" step="0.5" value="0.5" class="__lt-range-slider__input" />
           <input name="year_exp_aus_max" type="range" min="0.5" max="10" step="0.5" value="10" class="__lt-range-slider__input" />

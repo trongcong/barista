@@ -50,7 +50,7 @@
         },
         {
             "key": "field_625cefe813c9e",
-            "label": "Years Of Experience",
+            "label": "Barista Experience (Years)",
             "name": "years_of_experience",
             "aria-label": "",
             "type": "select",
@@ -78,7 +78,7 @@
         },
         {
             "key": "field_625ceff513c9f",
-            "label": "Experience in Australia",
+            "label": "Retail or Hospitality Experience",
             "name": "experience_in_australia",
             "aria-label": "",
             "type": "select",
@@ -340,5 +340,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1675575255
+    "modified": 1675959452
 }
