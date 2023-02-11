@@ -3,6 +3,7 @@ $text-color: #717070;
 $title-color: #341506;
 $green-color: #6e9817;
 $border-color: #e3e2e2;
+$hover-color: #13aff0;
 
 
 @function em($pixels, $context: 16) {
@@ -38,6 +39,25 @@ $border-color: #e3e2e2;
     }
 }
 
+@mixin text-overflow-ellipsis($lines-to-show: 2, $font-size: 14px, $line-height: 1.5) {
+    display: block;
+    /* Fallback for non-webkit */
+    display: -webkit-box;
+    /*
+    * If line-height is em then: height: $font-size*$line-height*$lines-to-show;
+    * Else line-height is px then: height: $line-height*1.65454545+$font-size*$lines-to-show; and line-height: $line-height*1.65454545;
+    */
+    height: $font-size*$line-height*$lines-to-show;
+    /* Fallback for non-webkit */
+    margin: 0 auto;
+    font-size: $font-size;
+    line-height: $line-height;
+    -webkit-line-clamp: $lines-to-show;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 %input-style {
     min-height: 40px;
     width: 100%;
@@ -53,6 +73,7 @@ $border-color: #e3e2e2;
 
     &:focus {
         border-color: darken($border-color, 20);
+
         &:invalid {
             color: #b94a48;
             border-color: #e9322d;
@@ -79,6 +100,7 @@ $border-color: #e3e2e2;
     letter-spacing: .1em;
     line-height: 1.5;
     transition: all .3s ease;
+    min-width: 150px;
 
     &:hover {
         background: $title-color;

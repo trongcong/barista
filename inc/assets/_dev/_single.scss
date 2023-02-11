@@ -19,7 +19,6 @@
     .__wrap {
         border: 1px solid $border-color;
         border-radius: 30px;
-        overflow: hidden;
         padding: 30px 20px;
         position: relative;
         @include media-breakpoint-down(sm) {
@@ -30,11 +29,11 @@
             display: inline-flex;
             position: absolute;
             z-index: 2;
-            top: 10px;
-            right: 10px;
+            top: -15px;
+            right: -20px;
             width: 50px;
             height: 50px;
-            color: $main-color;
+            color: $title-color;
 
             svg {
                 fill: currentColor;
@@ -101,16 +100,33 @@
                     }
 
                     .__contact-item {
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        grid-gap: 10px;
-                        @include media-breakpoint-up(sm) {
-                            font-size: 18px;
+                        //display: grid;
+                        //grid-template-columns: 1fr 1fr;
+                        //grid-gap: 10px;
+                        //@include media-breakpoint-up(sm) {
+                        //    font-size: 18px;
+                        //}
+                        //
+                        //> a {
+                        //    font-weight: 600;
+                        //    text-align: left;
+                        //}
+                        &:not(:first-child){
+                            margin-top: 10px;
                         }
-
-                        > a {
-                            font-weight: 600;
-                            text-align: left;
+                        &.__tell >a,&.__email >a{
+                            @extend %button-style;
+                            padding: 10px 20px;
+                            font-size: 16px;
+                            color: white;
+                            display: block;
+                            text-transform: none;
+                            &:hover{
+                                background-color: $hover-color;
+                            }
+                        }
+                        &.__email >a{
+                            background-color: $title-color;
                         }
                     }
                 }
@@ -237,6 +253,10 @@
 
     .acf-form-submit {
         text-align: center;
+        margin-top: 30px;
+        >.button{
+            @extend %button-style;
+        }
     }
 
     .acf-checkbox-list li {
@@ -248,7 +268,7 @@
     position: fixed;
     z-index: 9;
     right: 20px;
-    bottom: 15vh;
+    bottom: 25vh;
 
     > a {
         display: flex;
@@ -257,8 +277,8 @@
         font-weight: bold;
 
         > span.__svg {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: $main-color;
             display: flex;

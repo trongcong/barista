@@ -129,6 +129,7 @@ function lt_ajax_create_new_barista() {
 	$full_name                        = isset( $_POST['full_name'] ) ? $_POST['full_name'] : $active_code;
 	$describe_yourself_in_2_sentences = isset( $_POST['describe_yourself_in_2_sentences'] ) ? $_POST['describe_yourself_in_2_sentences'] : '';
 
+	$is_exits_profile = count_user_posts( get_current_user_id(), "barista" );
 	$query_active_code      = new WP_Query( [
 		'post_type'      => 'active_code',
 		'post_status'    => 'publish',
@@ -154,6 +155,10 @@ function lt_ajax_create_new_barista() {
 		]
 	] );
 
+	if ( !!$is_exits_profile ) {
+		wp_send_json_error( "Your profile really exists! Please contact admin for more details.", 404 );
+		wp_die();
+	}
 	if ( ! $active_code || ! $query_active_code->found_posts ) {
 		wp_send_json_error( "Active code not found!", 404 );
 		wp_die();

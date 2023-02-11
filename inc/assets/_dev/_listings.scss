@@ -96,7 +96,7 @@
     .__inner-wrap {
         border-bottom: 1px solid #e9e9e9;
         margin-bottom: 0;
-        padding: 24px 16px 10px;
+        padding: 24px 16px 55px;
     }
 
     .__item-top {
@@ -140,44 +140,17 @@
         grid-gap: 5px 10px;
     }
 
-    //
-    //hr {
-    //    clear: both;
-    //    height: 1px;
-    //    min-height: 0;
-    //    margin: 10px 0;
-    //    border-top: 1px solid #e9e9e9;
-    //    border-right: 0;
-    //    border-bottom: 0;
-    //    border-left: 0;
-    //}
-
     .__description {
-        $font-size: 14px;
-        $line-height: 1.5;
-        $lines-to-show: 2;
-
-        display: block;
-        /* Fallback for non-webkit */
-        display: -webkit-box;
-        /*
-        * If line-height is em then: height: $font-size*$line-height*$lines-to-show;
-        * Else line-height is px then: height: $line-height*1.65454545+$font-size*$lines-to-show; and line-height: $line-height*1.65454545;
-        */
-        height: $font-size*$line-height*$lines-to-show;
-        /* Fallback for non-webkit */
-        margin: 0 auto;
-        font-size: $font-size;
-        line-height: $line-height;
-        -webkit-line-clamp: $lines-to-show;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        @include text-overflow-ellipsis()
     }
 
     .__detail {
         //text-align: center;
         font-weight: 500;
+        position: absolute;
+        bottom: 0px;
+        left: 0;
+        width: 100%;
 
         a {
             display: flex;

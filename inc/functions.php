@@ -482,7 +482,7 @@ function lt_filter_group() {
 	<?php
 }
 
-function lt_filter_modal() {?>
+function lt_filter_modal() { ?>
     <div class="__lt-filter-modal" style="display: none">
         <div class="__lt-modal-backdrop"></div>
         <div class="__filter-popup-content">
@@ -505,3 +505,6 @@ function lt_filter_modal() {?>
     </div>
 	<?php
 }
+
+add_role( 'barista', __( 'Barista' ), array() );
+add_role( 'business', __( 'Business' ), array() );
