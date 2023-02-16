@@ -2183,9 +2183,3 @@ body.job_hunting_page header#site-header .elementor-button-wrapper a:hover {
 	}
 }
 
-.single-barista header#site-header,
-.page-template-page-create-jobs header#site-header,
-.page-template-page-listings header#site-header,
-.page-template-page-register-barista header#site-header {
-	position: relative;
-}

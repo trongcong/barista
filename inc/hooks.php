@@ -129,7 +129,7 @@ function lt_ajax_create_new_barista() {
 	$full_name                        = isset( $_POST['full_name'] ) ? $_POST['full_name'] : $active_code;
 	$describe_yourself_in_2_sentences = isset( $_POST['describe_yourself_in_2_sentences'] ) ? $_POST['describe_yourself_in_2_sentences'] : '';
 
-	$is_exits_profile = count_user_posts( get_current_user_id(), "barista" );
+	$is_exits_profile       = count_user_posts( get_current_user_id(), "barista" );
 	$query_active_code      = new WP_Query( [
 		'post_type'      => 'active_code',
 		'post_status'    => 'publish',
@@ -155,8 +155,8 @@ function lt_ajax_create_new_barista() {
 		]
 	] );
 
-	if ( !!$is_exits_profile ) {
-		wp_send_json_error( "Your profile really exists! Please contact admin for more details.", 404 );
+	if ( ! ! $is_exits_profile ) {
+		wp_send_json_error( "Your profile really exists! Go to your profile now?", 404 );
 		wp_die();
 	}
 	if ( ! $active_code || ! $query_active_code->found_posts ) {
@@ -189,6 +189,7 @@ function lt_ajax_create_new_barista() {
 	}
 	$date_of_post = get_the_date( "c", $post_id );
 	update_field( "re_active_profile", $date_of_post, $post_id );
+	update_field( "barista_profile_id", $post_id, "user_" . get_current_user_id() );
 
 	wp_send_json( [
 		'id'             => $post_id,
@@ -299,11 +300,77 @@ function lt_cta_contact() {
                 <span>Contact me</span>
                 <span class="__svg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-                      <path fill-rule="evenodd" d="M3.6 7.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V17c0 .6-.4 1-1 1C7.6 18 0 10.4 0 1c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1L3.6 7.8Z"/>
+                      <path fill-rule="evenodd" d="M3.6 7.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V17c0 .6-.4 1-1 1C7.6 18 0 10.4 0 1c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1L3.6 7.8Z" />
                     </svg>
                 </span>
             </a>
         </div>
 		<?php
 	}
+}
+
+add_role( 'barista', __( 'Barista' ), array() );
+add_role( 'business', __( 'Business' ), array() );
+
+//add_action( 'wp_trash_post', 'lt_add_action_before_delete_post', 99, 2 );
+add_action( 'before_delete_post', 'lt_add_action_before_delete_post', 99, 2 );
+function lt_add_action_before_delete_post( $postid, $post ) {
+	if ( 'barista' !== $post->post_type ) {
+		return;
+	}
+
+	$author_id = $post->post_author;
+	delete_field( 'barista_profile_id', 'user_' . $author_id );
+}
+
+
+add_filter( 'um_account_page_default_tabs_hook', 'lt_add_filter_um_account_page_default_tabs_hook', 100 );
+function lt_add_filter_um_account_page_default_tabs_hook( $tabs ) {
+	if ( ! can_show_barista_profile() ) {
+		return $tabs;
+	}
+	$tabs[110]['profile_barista']['icon']   = 'um-faicon-pencil';
+	$tabs[110]['profile_barista']['title']  = 'Barista Profile';
+	$tabs[110]['profile_barista']['custom'] = true;
+	if ( current_user_can( 'barista' ) ) {
+		unset( $tabs[300] );
+	}
+
+	return $tabs;
+}
+
+/* make our new tab hookable */
+add_action( 'um_account_tab_profile_barista', 'um_account_tab_profile_barista' );
+function um_account_tab_profile_barista( $info ) {
+	if ( ! can_show_barista_profile() ) {
+		return;
+	}
+	global $ultimatemember;
+	extract( $info );
+	$output = $ultimatemember->account->get_tab_output( 'profile_barista' );
+	if ( $output ) {
+		echo $output;
+	}
+}
+
+/* Finally we add some content in the tab */
+add_filter( 'um_account_content_hook_profile_barista', 'um_account_content_hook_profile_barista' );
+function um_account_content_hook_profile_barista( $output ) {
+	ob_start();
+	$can_edit_profile = is_user_logged_in() && get_barista_profile_id() && get_post_status( get_barista_profile_id() ) == 'publish';
+	?>
+    <div class="um-field">
+		<?php if ( $can_edit_profile ) {
+			echo '<a href="' . ( get_barista_profile_link() . '?edit' ) . '">Edit Barista Profile</a>';
+		} else {
+			echo "<p>Your barista profile not found! </p>";
+			echo '<a href="/register-barista/">Register Barista Profile</a>';
+		} ?>
+	</div>
+	<?php
+
+	$output .= ob_get_contents();
+	ob_end_clean();
+
+	return $output;
 }

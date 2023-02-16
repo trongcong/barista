@@ -263,7 +263,11 @@ jQuery(function ($) {
             } catch (e) {
                 console.error(e)
                 __removeAjaxLoading($wrap, classAddLoading)
-                alert(e.responseJSON.data)
+                if (ajax_data.barista_profile_url) {
+                    if (confirm(e.responseJSON.data) === true) window.location.href = ajax_data.barista_profile_url
+                } else {
+                    alert(e.responseJSON.data)
+                }
             }
         }
 
@@ -403,6 +407,16 @@ jQuery(function ($) {
         parent.querySelector('.__lt-range-slider__display').setAttribute('data-high', slide2);
     }
 
+    const GotoBaristaProfile = () => {
+        const tab_profile = '.um-account-side [data-tab="profile_barista"]';
+        if (!!ajax_data.barista_profile_url) {
+            const profile_barista_url = ajax_data.barista_profile_url + '?edit'
+            $(document).find(tab_profile).attr('href', profile_barista_url)
+            $(document).find(tab_profile).on('click', function () {
+                window.location.href = profile_barista_url
+            })
+        }
+    }
     $(document).ready(function () {
         document.querySelectorAll('.__lt-range-slider')
         .forEach(range => range.querySelectorAll('input')
@@ -417,6 +431,7 @@ jQuery(function ($) {
         CreateJob();
         ContactAction();
         HandleModal();
+        GotoBaristaProfile();
     });
     $(window).on('load', () => {
     });

@@ -25,20 +25,30 @@
             padding: 20px 15px;
         }
 
-        .__edit-profile {
-            display: inline-flex;
+        .__edit-profile-wrap {
             position: absolute;
             z-index: 2;
-            top: -15px;
+            top: -35px;
             right: -20px;
-            width: 50px;
-            height: 50px;
             color: $title-color;
 
-            svg {
-                fill: currentColor;
-                width: 100%;
-                height: 100%;
+            > a {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .__edit-profile {
+                width: 50px;
+                height: 50px;
+                color: #341506;
+                display: inline-flex;
+
+                svg {
+                    fill: currentColor;
+                    width: 100%;
+                    height: 100%;
+                }
             }
         }
 
@@ -60,6 +70,10 @@
                 overflow: hidden;
                 background: $border-color;
 
+                @include media-breakpoint-down(sm) {
+                    margin: auto;
+                }
+
                 img {
                     width: 100%;
                     height: 100%;
@@ -75,6 +89,7 @@
                 gap: 1em;
                 @include media-breakpoint-down(sm) {
                     display: block;
+                    text-align: center;
                 }
 
                 .__exp {
@@ -111,21 +126,24 @@
                         //    font-weight: 600;
                         //    text-align: left;
                         //}
-                        &:not(:first-child){
+                        &:not(:first-child) {
                             margin-top: 10px;
                         }
-                        &.__tell >a,&.__email >a{
+
+                        &.__tell > a, &.__email > a {
                             @extend %button-style;
                             padding: 10px 20px;
                             font-size: 16px;
                             color: white;
                             display: block;
                             text-transform: none;
-                            &:hover{
+
+                            &:hover {
                                 background-color: $hover-color;
                             }
                         }
-                        &.__email >a{
+
+                        &.__email > a {
                             background-color: $title-color;
                         }
                     }
@@ -156,6 +174,12 @@
 
                 .__ct-info-item {
                     padding-top: 20px;
+
+                    > div {
+                        font-weight: bold;
+                        color: $title-color;
+                        font-size: 14px;
+                    }
 
                     &:not(:last-child) {
                         padding: 20px 0;
@@ -254,7 +278,8 @@
     .acf-form-submit {
         text-align: center;
         margin-top: 30px;
-        >.button{
+
+        > .button {
             @extend %button-style;
         }
     }

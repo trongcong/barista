@@ -10,13 +10,14 @@ function lt_enqueue_scripts() {
 	), WP_DEBUG ? rand() : "1.1", true );
 
 	wp_localize_script( 'lt-script', 'ajax_data', [
-		'admin_logged' => in_array( 'administrator', wp_get_current_user()->roles ) ? 'yes' : 'no',
-		'ajax_url'     => admin_url( 'admin-ajax.php' ),
-		'tpd_uri'      => get_template_directory_uri(),
-		'site_url'     => site_url(),
-		'rest_url'     => get_rest_url(),
-		'_ajax_nonce'  => wp_create_nonce( "_security" ),
-		'post_id'      => get_the_ID(),
+		'admin_logged'        => in_array( 'administrator', wp_get_current_user()->roles ) ? 'yes' : 'no',
+		'ajax_url'            => admin_url( 'admin-ajax.php' ),
+		'tpd_uri'             => get_template_directory_uri(),
+		'site_url'            => site_url(),
+		'rest_url'            => get_rest_url(),
+		'_ajax_nonce'         => wp_create_nonce( "_security" ),
+		'post_id'             => get_the_ID(),
+		'barista_profile_url' => get_barista_profile_link(),
 	] );
 }
 
@@ -506,5 +507,33 @@ function lt_filter_modal() { ?>
 	<?php
 }
 
-add_role( 'barista', __( 'Barista' ), array() );
-add_role( 'business', __( 'Business' ), array() );
+function get_barista_profile_id( $user_id = 0 ) {
+	return get_field( 'barista_profile_id', 'user_' . ( ! empty( $user_id ) ? $user_id : get_current_user_id() ) );
+}
+
+function get_user_id_by_post_id( $post_id ) {
+	return get_post_field( 'post_author', $post_id );
+}
+
+function get_barista_avatar( $post_id ) {
+	$avatar_id = get_field( 'your_avatar', $post_id );
+
+	return $avatar_id ? wp_get_attachment_image_url( $avatar_id['ID'] ) : 'https://via.placeholder.com/120x120.png';
+}
+
+function get_barista_profile_link() {
+	$profile_id = get_barista_profile_id();
+
+	return $profile_id && get_post_status( $profile_id ) == 'publish' ? get_the_permalink( $profile_id ) : false;
+}
+
+
+/**
+ * @return bool
+ */
+function can_show_barista_profile() {
+	$profile_id = get_barista_profile_id();
+
+	return $profile_id && ( current_user_can( 'barista' ) || current_user_can( 'administrator' ) );
+}
+

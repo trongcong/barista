@@ -30,3 +30,25 @@ form textarea {
         }
     }
 }
+
+.um-account-main {
+    .um-account-tab-profile_barista {
+        //> * {
+        //    @include media-breakpoint-up(sm) {
+        //        display: none;
+        //    }
+        //}
+
+        .um-col-alt-b {
+            display: none;
+        }
+    }
+}
+
+.um-page-loggedin header#site-header,
+.single-barista header#site-header,
+.page-template-page-create-jobs header#site-header,
+.page-template-page-listings header#site-header,
+.page-template-page-register-barista header#site-header {
+    position: relative;
+}
