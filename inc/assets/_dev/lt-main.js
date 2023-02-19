@@ -1,5 +1,3 @@
-import { wrap } from "../../../../../../wp-includes/js/dist/vendor/regenerator-runtime";
-
 function _extends() {
     return (_extends = Object.assign || function (target) {
         for (let i = 1; i < arguments.length; i++) {
@@ -49,7 +47,7 @@ jQuery(function ($) {
 
     const isValidRequired = (e, valid) => {
         $(e).find('.__err').remove()
-        const $span = $(e).find('>span').length ? $(e).find('>span') : $(e).find('>label>span');
+        const $span = $(e).find('>span:nth-child(1)').length ? $(e).find('>span:nth-child(1)') : $(e).find('>label>span:nth-child(1)');
         if (!valid) {
             scrollToElement($(e));
             $span.after("<p class='__err'>This field is required</p>")
@@ -254,20 +252,20 @@ jQuery(function ($) {
                     contentType: false,
                     data: formData,
                 });
-                //console.log(data)
+                console.log(data)
 
-                $form.trigger("reset");
+                //$form.trigger("reset");
                 __removeAjaxLoading($wrap, classAddLoading);
                 $btnRegister.attr('disabled', true);
-                window.location.href = data.url;
+                //window.location.href = data.url;
             } catch (e) {
                 console.error(e)
                 __removeAjaxLoading($wrap, classAddLoading)
-                if (ajax_data.barista_profile_url) {
-                    if (confirm(e.responseJSON.data) === true) window.location.href = ajax_data.barista_profile_url
-                } else {
-                    alert(e.responseJSON.data)
-                }
+                //if (ajax_data.barista_profile_url) {
+                //    if (confirm(e.responseJSON.data) === true) window.location.href = ajax_data.barista_profile_url
+                //} else {
+                //    alert(e.responseJSON.data)
+                //}
             }
         }
 
@@ -410,7 +408,7 @@ jQuery(function ($) {
     const GotoBaristaProfile = () => {
         const tab_profile = '.um-account-side [data-tab="profile_barista"]';
         if (!!ajax_data.barista_profile_url) {
-            const profile_barista_url = ajax_data.barista_profile_url + '?edit'
+            const profile_barista_url = ajax_data.barista_profile_url
             $(document).find(tab_profile).attr('href', profile_barista_url)
             $(document).find(tab_profile).on('click', function () {
                 window.location.href = profile_barista_url

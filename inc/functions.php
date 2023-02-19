@@ -219,15 +219,15 @@ function get_video_url( $postID ) {
 }
 
 /**
- * @param string $file_key
- * @param $post_id
+ * @param $name
+ * @param $tmp_name
  *
  * @return int|WP_Error|null
  */
-function upload_file_to_media( $file_key, $post_id ) {
-	$fileName      = preg_replace( '/\s+/', '-', $_FILES[ $file_key ]["name"] );
+function upload_file_to_media( $name, $tmp_name ) {
+	$fileName      = preg_replace( '/\s+/', '-', $name );
 	$fileName      = preg_replace( '/[^A-Za-z0-9.\-]/', '', $fileName );
-	$upload        = wp_upload_bits( $fileName, null, file_get_contents( $_FILES[ $file_key ]["tmp_name"] ) );
+	$upload        = wp_upload_bits( $fileName, null, file_get_contents( $tmp_name ) );
 	$attachment_id = wp_insert_attachment( array(
 		'guid'           => $upload['url'],
 		'post_mime_type' => $upload['type'],
@@ -240,7 +240,6 @@ function upload_file_to_media( $file_key, $post_id ) {
 	require_once( ABSPATH . 'wp-admin/includes/image.php' );
 
 	wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $upload['file'] ) );
-	update_field( $file_key, $attachment_id, $post_id );
 
 	return $attachment_id;
 }
@@ -282,7 +281,7 @@ function get_certification_by_barista( $id ) {
 function render_tag_from_acf_fields( $field ) {
 	$label_required = $field['required'] ? "<span class='__label-required'> *</span>" : "";
 	$class_required = $field['required'] ? "__required" : "";
-	echo '<div class="__ltrg-item">';
+	echo '<div class="__ltrg-item __field-' . $field['type'] . '">';
 	if ( $field['type'] == "checkbox" ) { ?>
         <div class="__lt-checkbox-group <?= $class_required ?>">
             <span><?= $field['label'] ?><?= $label_required ?></span>
@@ -336,6 +335,14 @@ function render_tag_from_acf_fields( $field ) {
             <label>
                 <span><?= $field['label'] ?><?= $label_required ?></span>
                 <input <?= $mime_types ?> name="<?= $field['name'] ?>" type="<?= $type ?>" placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
+            </label>
+        </div>
+		<?php
+	} elseif ( $field['type'] == "repeater" && $field['name'] == 'your_photos' ) { ?>
+        <div class="__lt-input <?= $class_required ?>">
+            <label>
+                <span><?= $field['label'] ?><?= $label_required ?></span>
+                <input multiple accept="image/*" name="<?= $field['name'] ?>[]" type="file" placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
             </label>
         </div>
 		<?php
@@ -524,16 +531,20 @@ function get_barista_avatar( $post_id ) {
 function get_barista_profile_link() {
 	$profile_id = get_barista_profile_id();
 
-	return $profile_id && get_post_status( $profile_id ) == 'publish' ? get_the_permalink( $profile_id ) : false;
+	return can_edit_barista_profile() ? get_the_permalink( $profile_id ) . '?edit' : '/register-barista/';
 }
 
 
 /**
  * @return bool
  */
-function can_show_barista_profile() {
+function can_show_barista_profile_tab() {
 	$profile_id = get_barista_profile_id();
 
 	return $profile_id && ( current_user_can( 'barista' ) || current_user_can( 'administrator' ) );
 }
 
+function can_edit_barista_profile() {
+
+	return is_user_logged_in() && get_barista_profile_id() && get_post_status( get_barista_profile_id() ) == 'publish';
+}

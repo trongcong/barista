@@ -125,6 +125,7 @@ function lt_ajax_create_new_barista() {
 	// First check the nonce, if it fails the function will break
 	check_ajax_referer( "_security", 'security' );
 
+	ob_start();
 	$active_code                      = isset( $_POST['active_code'] ) ? trim( $_POST['active_code'] ) : '';
 	$full_name                        = isset( $_POST['full_name'] ) ? $_POST['full_name'] : $active_code;
 	$describe_yourself_in_2_sentences = isset( $_POST['describe_yourself_in_2_sentences'] ) ? $_POST['describe_yourself_in_2_sentences'] : '';
@@ -183,18 +184,37 @@ function lt_ajax_create_new_barista() {
 		}
 	}
 	$attachment_ids = [];
-	foreach ( $_FILES as $key => $value ) {
-		$attachment_id    = upload_file_to_media( $key, $post_id );
-		$attachment_ids[] = $attachment_id;
+	foreach ( $_FILES as $key => $file ) {
+		if ( ! is_array( $file['tmp_name'] ) ) {
+			$attachment_id = upload_file_to_media( $file['name'], $file["tmp_name"] );
+			update_field( $key, $attachment_id, $post_id );
+			$attachment_ids[] = $attachment_id;
+		}
+		if ( $key == 'your_photos' ) {
+			foreach ( $file['tmp_name'] as $index => $v ) {
+				$attachment_id = upload_file_to_media( $file['name'][ $index ], $file['tmp_name'][ $index ] );
+				add_row( $key, [ 'photo_item' => $attachment_id ], $post_id );
+				$attachment_ids[] = $attachment_id;
+			}
+		}
 	}
 	$date_of_post = get_the_date( "c", $post_id );
 	update_field( "re_active_profile", $date_of_post, $post_id );
 	update_field( "barista_profile_id", $post_id, "user_" . get_current_user_id() );
 
+	//	$u = new WP_User( get_current_user_id() );
+	//if (){
+	//	$u->set_role( 'barista' );
+	//	$u->get_role_caps()
+	//}
+	$d = ob_get_clean();
 	wp_send_json( [
+		'd'              => $d,
 		'id'             => $post_id,
 		'attachment_ids' => $attachment_ids,
 		'url'            => get_permalink( $post_id ),
+		'$_POST'         => $_POST,
+		'$_FILES'        => $_FILES,
 	] );
 
 	wp_die();
@@ -248,8 +268,9 @@ function lt_ajax_create_new_job() {
 	}
 
 	$attachment_ids = [];
-	foreach ( $_FILES as $key => $value ) {
-		$attachment_id    = upload_file_to_media( $key, $post_id );
+	foreach ( $_FILES as $key => $file ) {
+		$attachment_id = upload_file_to_media( $file['name'], $file["tmp_name"] );
+		update_field( $key, $attachment_id, $post_id );
 		$attachment_ids[] = $attachment_id;
 	}
 
@@ -326,13 +347,14 @@ function lt_add_action_before_delete_post( $postid, $post ) {
 
 add_filter( 'um_account_page_default_tabs_hook', 'lt_add_filter_um_account_page_default_tabs_hook', 100 );
 function lt_add_filter_um_account_page_default_tabs_hook( $tabs ) {
-	if ( ! can_show_barista_profile() ) {
-		return $tabs;
+	$title = 'Update Barista Profile';
+	if ( ! can_edit_barista_profile() ) {
+		$title = 'Register Barista Profile';
 	}
 	$tabs[110]['profile_barista']['icon']   = 'um-faicon-pencil';
-	$tabs[110]['profile_barista']['title']  = 'Barista Profile';
+	$tabs[110]['profile_barista']['title']  = $title;
 	$tabs[110]['profile_barista']['custom'] = true;
-	if ( current_user_can( 'barista' ) ) {
+	if ( can_edit_barista_profile() ) {
 		unset( $tabs[300] );
 	}
 
@@ -342,9 +364,6 @@ function lt_add_filter_um_account_page_default_tabs_hook( $tabs ) {
 /* make our new tab hookable */
 add_action( 'um_account_tab_profile_barista', 'um_account_tab_profile_barista' );
 function um_account_tab_profile_barista( $info ) {
-	if ( ! can_show_barista_profile() ) {
-		return;
-	}
 	global $ultimatemember;
 	extract( $info );
 	$output = $ultimatemember->account->get_tab_output( 'profile_barista' );
@@ -356,12 +375,10 @@ function um_account_tab_profile_barista( $info ) {
 /* Finally we add some content in the tab */
 add_filter( 'um_account_content_hook_profile_barista', 'um_account_content_hook_profile_barista' );
 function um_account_content_hook_profile_barista( $output ) {
-	ob_start();
-	$can_edit_profile = is_user_logged_in() && get_barista_profile_id() && get_post_status( get_barista_profile_id() ) == 'publish';
-	?>
+	ob_start(); ?>
     <div class="um-field">
-		<?php if ( $can_edit_profile ) {
-			echo '<a href="' . ( get_barista_profile_link() . '?edit' ) . '">Edit Barista Profile</a>';
+		<?php if ( can_edit_barista_profile() ) {
+			echo '<a href="' . ( get_barista_profile_link() . '?edit' ) . '">Update Barista Profile</a>';
 		} else {
 			echo "<p>Your barista profile not found! </p>";
 			echo '<a href="/register-barista/">Register Barista Profile</a>';
@@ -373,4 +390,21 @@ function um_account_content_hook_profile_barista( $output ) {
 	ob_end_clean();
 
 	return $output;
+}
+
+add_action( 'um_delete_user', 'add_action_um_delete_user', 20, 1 );
+function add_action_um_delete_user( $user_id ) {
+	$args       = array(
+		'numberposts' => - 1,
+		'post_type'   => [ 'barista' ],
+		'author'      => $user_id
+	);
+	$user_posts = get_posts( $args );
+
+	if ( empty( $user_posts ) ) {
+		return;
+	}
+	foreach ( $user_posts as $user_post ) {
+		wp_delete_post( $user_post->ID, true );
+	}
 }
