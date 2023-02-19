@@ -125,7 +125,6 @@ function lt_ajax_create_new_barista() {
 	// First check the nonce, if it fails the function will break
 	check_ajax_referer( "_security", 'security' );
 
-	ob_start();
 	$active_code                      = isset( $_POST['active_code'] ) ? trim( $_POST['active_code'] ) : '';
 	$full_name                        = isset( $_POST['full_name'] ) ? $_POST['full_name'] : $active_code;
 	$describe_yourself_in_2_sentences = isset( $_POST['describe_yourself_in_2_sentences'] ) ? $_POST['describe_yourself_in_2_sentences'] : '';
@@ -202,19 +201,13 @@ function lt_ajax_create_new_barista() {
 	update_field( "re_active_profile", $date_of_post, $post_id );
 	update_field( "barista_profile_id", $post_id, "user_" . get_current_user_id() );
 
-	//	$u = new WP_User( get_current_user_id() );
-	//if (){
-	//	$u->set_role( 'barista' );
-	//	$u->get_role_caps()
-	//}
-	$d = ob_get_clean();
+	$u = new WP_User( get_current_user_id() );
+	$u->set_role( 'barista' );
+
 	wp_send_json( [
-		'd'              => $d,
 		'id'             => $post_id,
 		'attachment_ids' => $attachment_ids,
 		'url'            => get_permalink( $post_id ),
-		'$_POST'         => $_POST,
-		'$_FILES'        => $_FILES,
 	] );
 
 	wp_die();
@@ -378,10 +371,10 @@ function um_account_content_hook_profile_barista( $output ) {
 	ob_start(); ?>
     <div class="um-field">
 		<?php if ( can_edit_barista_profile() ) {
-			echo '<a href="' . ( get_barista_profile_link() . '?edit' ) . '">Update Barista Profile</a>';
+			echo '<a href="' . ( get_barista_profile_link() ) . '">Update Barista Profile Now</a>';
 		} else {
 			echo "<p>Your barista profile not found! </p>";
-			echo '<a href="/register-barista/">Register Barista Profile</a>';
+			echo '<a href="/register-barista/">Register Barista Profile Now</a>';
 		} ?>
 	</div>
 	<?php

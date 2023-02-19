@@ -252,20 +252,20 @@ jQuery(function ($) {
                     contentType: false,
                     data: formData,
                 });
-                console.log(data)
+                //console.log(data)
 
-                //$form.trigger("reset");
+                $form.trigger("reset");
                 __removeAjaxLoading($wrap, classAddLoading);
                 $btnRegister.attr('disabled', true);
-                //window.location.href = data.url;
+                window.location.href = data.url;
             } catch (e) {
                 console.error(e)
                 __removeAjaxLoading($wrap, classAddLoading)
-                //if (ajax_data.barista_profile_url) {
-                //    if (confirm(e.responseJSON.data) === true) window.location.href = ajax_data.barista_profile_url
-                //} else {
-                //    alert(e.responseJSON.data)
-                //}
+                if (ajax_data.barista_profile_url) {
+                    if (confirm(e.responseJSON.data) === true) window.location.href = ajax_data.barista_profile_url
+                } else {
+                    alert(e.responseJSON.data)
+                }
             }
         }
 
@@ -322,7 +322,7 @@ jQuery(function ($) {
 
                 $form.trigger("reset");
                 __removeAjaxLoading($wrap, classAddLoading);
-                //window.location.href = data.url;
+                window.location.href = data.url;
             } catch (e) {
                 console.error(e)
                 __removeAjaxLoading($wrap, classAddLoading)

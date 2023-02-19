@@ -528,10 +528,10 @@ function get_barista_avatar( $post_id ) {
 	return $avatar_id ? wp_get_attachment_image_url( $avatar_id['ID'] ) : 'https://via.placeholder.com/120x120.png';
 }
 
-function get_barista_profile_link() {
+function get_barista_profile_link( $edit = true ) {
 	$profile_id = get_barista_profile_id();
 
-	return can_edit_barista_profile() ? get_the_permalink( $profile_id ) . '?edit' : '/register-barista/';
+	return can_edit_barista_profile() ? get_the_permalink( $profile_id ) . ( $edit ? '?edit' : '' ) : '/register-barista/';
 }
 
 

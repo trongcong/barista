@@ -37,12 +37,13 @@ lt_add_page_header( $title );
 					$avatar       = get_field( "your_avatar" );
 					if ( $is_edit_barista ) { ?>
                         <div class="__lt-single-update">
-                            <?php acf_form( array(
-	                            'post_id'      => get_the_ID(),
-	                            'return'       => get_the_permalink(),
-	                            'uploader'     => 'basic',
-	                            'submit_value' => "Update profile",
-                            ) ); ?>
+                            <h6><a href="<?= get_barista_profile_link( false ) ?>"><< Back to profile</a></h6>
+							<?php acf_form( array(
+								'post_id'      => get_the_ID(),
+								'return'       => get_the_permalink(),
+								'uploader'     => 'basic',
+								'submit_value' => "Update profile",
+							) ); ?>
                         </div>
 					<?php } else { ?>
                         <div class="__lt-single-barista">
@@ -158,12 +159,29 @@ lt_add_page_header( $title );
                                     </div>
                                     <div class="__ct-right">
                                         <div class="__ct-des"><?= get_field( "describe_yourself_in_2_sentences" ) ?></div>
-                                        <div class="__ct-video">
-                                            <h4 class="__video-title">Watch me in action</h4>
+                                        <div class="__ct-item __ct-video">
+                                            <h4 class="__ct-title __video-title">Watch me in action</h4>
                                             <div class="__video-iframe">
                                                 <iframe width="1417" height="537" src="https://www.youtube.com/embed/<?= get_video_url( get_the_ID() ) ?>" title="Watch me in action" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                                             </div>
                                         </div>
+
+                                        <div class="__ct-item __ct-photos">
+                                            <h4 class="__ct-title __photo-title">My Photos</h4>
+                                            <div class="__photos-grid">
+                                                <?php
+                                                if ( have_rows( 'your_photos' ) ):
+	                                                while ( have_rows( 'your_photos' ) ) : the_row();
+		                                                $photo = get_sub_field( 'photo_item' );
+		                                                echo '<div class="photo-item"><a target="_blank" href="' . $photo . '"><img src="' . $photo . '" alt="photo"></a></div>';
+	                                                endwhile;
+                                                else :
+	                                                echo '<p>Does not have any photos.</p>';
+                                                endif;
+                                                ?>
+                                             </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
