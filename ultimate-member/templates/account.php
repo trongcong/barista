@@ -35,17 +35,17 @@ $avatar     = get_barista_avatar( $profile_id );
             <div class="um-account-meta radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?> uimob340-show uimob500-show">
 
 				<div class="um-account-meta-img">
-					<a href="<?php echo esc_url( get_barista_profile_link() ); ?>">
+					<a href="<?php echo esc_url( get_barista_profile_link( false ) ); ?>">
                         <?php echo "<img class='gravatar avatar avatar-120 um-avatar um-avatar-default' width='120' height='120' src='" . $avatar . "' alt='avatar'/>"; ?>
                     </a>
 				</div>
 
 				<div class="um-account-name">
-					<a href="<?php echo esc_url( get_barista_profile_link() ); ?>">
+					<a href="<?php echo esc_url( get_barista_profile_link( false ) ); ?>">
 						<?php echo esc_html( um_user( 'display_name' ) ); ?>
 					</a>
 					<div class="um-account-profile-link">
-						<a href="<?php echo esc_url( get_barista_profile_link() ); ?>" class="um-link">
+						<a href="<?php echo esc_url( get_barista_profile_link( false ) ); ?>" class="um-link">
 							<?php _e( 'View profile', 'ultimate-member' ); ?>
 						</a>
 					</div>
@@ -58,7 +58,7 @@ $avatar     = get_barista_avatar( $profile_id );
 				<div class="um-account-meta radius-<?php echo esc_attr( UM()->options()->get( 'profile_photocorner' ) ); ?>">
 
 					<div class="um-account-meta-img uimob800-hide">
-                        <a href="<?php echo esc_url( get_barista_profile_link() ); ?>">
+                        <a href="<?php echo esc_url( get_barista_profile_link( false ) ); ?>">
                             <?php echo "<img class='gravatar avatar avatar-120 um-avatar um-avatar-default' width='120' height='120' src='" . $avatar . "' alt='avatar'/>"; ?>
                         </a>
 					</div>
@@ -66,7 +66,7 @@ $avatar     = get_barista_avatar( $profile_id );
 					<?php if ( UM()->mobile()->isMobile() ) { ?>
 
                         <div class="um-account-meta-img-b uimob800-show" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
-                            <a href="<?php echo esc_url( get_barista_profile_link() ); ?>">
+                            <a href="<?php echo esc_url( get_barista_profile_link( false ) ); ?>">
                                 <?php echo "<img class='gravatar avatar avatar-120 um-avatar um-avatar-default' width='120' height='120' src='" . $avatar . "' alt='avatar'/>"; ?>
                             </a>
 						</div>
@@ -74,7 +74,7 @@ $avatar     = get_barista_avatar( $profile_id );
 					<?php } else { ?>
 
                         <div class="um-account-meta-img-b uimob800-show um-tip-<?php echo is_rtl() ? 'e' : 'w'; ?>" title="<?php echo esc_attr( um_user( 'display_name' ) ); ?>">
-                            <a href="<?php echo esc_url( get_barista_profile_link() ); ?>">
+                            <a href="<?php echo esc_url( get_barista_profile_link( false ) ); ?>">
                                 <?php echo "<img class='gravatar avatar avatar-120 um-avatar um-avatar-default' width='120' height='120' src='" . $avatar . "' alt='avatar'/>"; ?>
                             </a>
 						</div>
@@ -82,11 +82,11 @@ $avatar     = get_barista_avatar( $profile_id );
 					<?php } ?>
 
                     <div class="um-account-name uimob800-hide">
-						<a href="<?php echo esc_url( get_barista_profile_link() ); ?>">
+						<a href="<?php echo esc_url( get_barista_profile_link( false ) ); ?>">
 							<?php echo um_user( 'display_name', 'html' ); ?>
 						</a>
 						<div class="um-account-profile-link">
-							<a href="<?php echo esc_url( get_barista_profile_link() ); ?>" class="um-link">
+							<a href="<?php echo esc_url( get_barista_profile_link( false ) ); ?>" class="um-link">
 								<?php _e( 'View profile', 'ultimate-member' ); ?>
 							</a>
 						</div>

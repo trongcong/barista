@@ -15,7 +15,7 @@
     }
   },
   "license": "MIT",
-  "browserslist": "> 0.25%, last 4 versions, not dead",
+  "browserslist": "> 0.5%, last 4 versions, not dead",
   "scripts": {
     "start": "parcel",
     "b": "parcel build --no-source-maps --no-cache",

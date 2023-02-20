@@ -401,3 +401,47 @@ function add_action_um_delete_user( $user_id ) {
 		wp_delete_post( $user_post->ID, true );
 	}
 }
+
+add_filter( 'manage_active_code_posts_columns', 'custom_columns_list_for_active_code' );
+function custom_columns_list_for_active_code( $columns ) {
+	$columns['active_code'] = 'Active Code';
+	$columns['used_by']     = 'User By';
+
+	return $columns;
+}
+
+add_action( 'manage_active_code_posts_custom_column', 'active_code_custom_column_values', 10, 2 );
+function active_code_custom_column_values( $column, $post_id ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return;
+	}
+	$active_code = get_field( 'active_code', $post_id );
+
+	$query_active_code_used = new WP_Query( [
+		'post_type'      => 'barista',
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+		'meta_query'     => [
+			array(
+				'key'     => 'active_code',
+				'value'   => $active_code,
+				'compare' => '=',
+			)
+		]
+	] );
+
+	switch ( $column ) {
+		case 'active_code'    :
+			echo '<code style="padding: 5px;">' . $active_code . '</code>';
+
+			break;
+		case 'used_by':
+			if ( ! $query_active_code_used->found_posts ) {
+				echo '<code style="padding: 5px;">Unused</code>';
+			} else {
+				$post_title = $query_active_code_used->post->post_title;
+				echo '<code style="padding: 5px;">Used by <a href="' . admin_url( '/edit.php?s=' . $post_title . '&post_status=all&post_type=barista' ) . '">' . $post_title . '</a></code>';
+			}
+			break;
+	}
+}

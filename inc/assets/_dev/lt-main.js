@@ -56,17 +56,26 @@ jQuery(function ($) {
         return true
     }
 
-    const countFilter = ({
-                             training_certification, barista_skills, volumes, hospitality_skills,
-                             year_exp_min, year_exp_max, year_exp_aus_min, year_exp_aus_max
-                         }) => {
+    const countFilter = (data) => {
+        const {
+            training_certification,
+            barista_skills,
+            volumes, hospitality_skills,
+            year_exp_min,
+            year_exp_max,
+            year_exp_aus_min,
+            year_exp_aus_max
+        } = data
+        //console.log(data)
         let counter = 0;
-        if (training_certification.length) counter += 1
-        if (barista_skills.length) counter += 1
-        if (volumes.length) counter += 1
-        if (hospitality_skills.length) counter += 1
-        if (year_exp_min > 0.5 || year_exp_max < 10) counter += 1
-        if (year_exp_aus_min > 0.5 || year_exp_aus_max < 10) counter += 1
+        if (training_certification?.length) counter += 1;
+        if (barista_skills?.length) counter += 1;
+        if (volumes?.length) counter += 1;
+        if (hospitality_skills?.length) counter += 1;
+        if (year_exp_min > 0.5 || year_exp_max < 10) counter += 1;
+        if (year_exp_aus_min > 0.5 || year_exp_aus_max < 10) {
+            counter += 1
+        }
         return counter;
     };
 
@@ -144,9 +153,10 @@ jQuery(function ($) {
     const setCounterButtonFilter = ($wrap, $open) => {
         const object_filter = $wrap.data("object-filter");
         if (object_filter) {
-            const parseObjectFilter = JSON.parse(object_filter)
-            const counter = countFilter({...parseObjectFilter});
-            $open.find("span:nth-child(1)").html(counter ? `<span class="filters-counter">${counter}</span>` : "")
+            const parseObjectFilter = JSON.parse(object_filter);
+            const counter = countFilter(parseObjectFilter);
+
+            $open.find(">span:nth-child(1)").html(counter ? `<span class="filters-counter">${counter}</span>` : "")
         }
     };
 
@@ -183,7 +193,7 @@ jQuery(function ($) {
         if (!object_filter) return;
 
         const parseObjectFilter = JSON.parse(object_filter)
-        console.log(parseObjectFilter)
+        //console.log(parseObjectFilter)
         for (const prop in parseObjectFilter) {
             if (parseObjectFilter.hasOwnProperty(prop)) {
                 const values = parseObjectFilter[prop]
