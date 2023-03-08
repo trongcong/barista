@@ -240,11 +240,16 @@
                     .__photos-grid {
                         display: grid;
                         grid-template-columns: 1fr 1fr 1fr;
-                        grid-gap: 20px 10px;
+                        grid-gap: 20px;
+                        @include media-breakpoint-down(sm) {
+                            grid-template-columns: 1fr 1fr;
+                        }
 
                         .photo-item {
                             a {
                                 display: block;
+                                width: 100%;
+                                height: 100%;
 
                                 img {
                                     width: 100%;

@@ -1,15 +1,8 @@
-function _extends() {
-    return (_extends = Object.assign || function (target) {
-        for (let i = 1; i < arguments.length; i++) {
-            let source = arguments[i];
-            for (let key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
-        }
-        return target;
-    }).apply(this, arguments);
-}
+"use strict";
+import {FilterJobs} from "./_filter-jobs";
+import {helpers} from "./_helpers";
 
 jQuery(function ($) {
-    "use strict";
     console.log('lt ready');
 
     $.fn.serializeFiles = function () {
@@ -29,32 +22,6 @@ jQuery(function ($) {
 
         return formData;
     };
-
-    const scrollToElement = ($e, speed = 500) => {
-        if (!$e.length) return
-        $([document.documentElement, document.body]).animate({
-            scrollTop: $e.offset().top - 50
-        }, speed);
-    };
-    const __addAjaxLoading = ($wrap, classString) => {
-        $wrap.find(classString).prepend('<div class="lds-ripple"><div></div><div></div></div>')
-        $wrap.find(classString).addClass('__is-inprogress')
-    }
-    const __removeAjaxLoading = ($wrap, classString) => {
-        $wrap.find(classString).removeClass('__is-inprogress')
-        $wrap.find(`${classString} .lds-ripple`).remove()
-    }
-
-    const isValidRequired = (e, valid) => {
-        $(e).find('.__err').remove()
-        const $span = $(e).find('>span:nth-child(1)').length ? $(e).find('>span:nth-child(1)') : $(e).find('>label>span:nth-child(1)');
-        if (!valid) {
-            scrollToElement($(e));
-            $span.after("<p class='__err'>This field is required</p>")
-            return false
-        }
-        return true
-    }
 
     const countFilter = (data) => {
         const {
@@ -92,8 +59,8 @@ jQuery(function ($) {
         } = object;
         $wrap.data("object-filter", JSON.stringify(object))
 
-        __addAjaxLoading($wrap, classAddLoading)
-        scrollToElement($wrap)
+        helpers.__addAjaxLoading($wrap, classAddLoading)
+        helpers.scrollToElement($wrap)
         try {
             const {items, count} = await $.ajax({
                 type: "post",
@@ -113,10 +80,10 @@ jQuery(function ($) {
 
             $wrap.find(".__lt-items-wrap").html(items)
             $(".__counter-result").text(`(${count} barista${count > 1 ? "s" : ""})`)
-            __removeAjaxLoading($wrap, classAddLoading)
+            helpers.__removeAjaxLoading($wrap, classAddLoading)
         } catch (e) {
             console.error(e)
-            __removeAjaxLoading($wrap, classAddLoading)
+            helpers.__removeAjaxLoading($wrap, classAddLoading)
         }
     }
 
@@ -243,8 +210,8 @@ jQuery(function ($) {
             $form = $wrap.find('form');
 
         const __ajax = async () => {
-            __addAjaxLoading($wrap, classAddLoading)
-            scrollToElement($form)
+            helpers.__addAjaxLoading($wrap, classAddLoading)
+            helpers.scrollToElement($form)
             try {
                 const formData = $form.serializeFiles()
                 formData.append("action", 'lt_ajax_create_new_barista')
@@ -265,12 +232,12 @@ jQuery(function ($) {
                 //console.log(data)
 
                 $form.trigger("reset");
-                __removeAjaxLoading($wrap, classAddLoading);
+                helpers.__removeAjaxLoading($wrap, classAddLoading);
                 $btnRegister.attr('disabled', true);
                 window.location.href = data.url;
             } catch (e) {
                 console.error(e)
-                __removeAjaxLoading($wrap, classAddLoading)
+                helpers.__removeAjaxLoading($wrap, classAddLoading)
                 if (ajax_data.barista_profile_url) {
                     if (confirm(e.responseJSON.data) === true) window.location.href = ajax_data.barista_profile_url
                 } else {
@@ -298,7 +265,7 @@ jQuery(function ($) {
                 } else if ($(e).hasClass('__lt-checkbox-group')) {
                     valid = $(e).find('input[type="checkbox"]:checked').length > 0;
                 }
-                if (!isValidRequired(e, valid)) return
+                if (!helpers.isValidRequired(e, valid)) return
             }
 
             __ajax();
@@ -313,8 +280,8 @@ jQuery(function ($) {
             $form = $wrap.find('form');
 
         const __ajax = async () => {
-            __addAjaxLoading($wrap, classAddLoading)
-            scrollToElement($form)
+            helpers.__addAjaxLoading($wrap, classAddLoading)
+            helpers.scrollToElement($form)
             try {
                 const formData = $form.serializeFiles()
                 formData.append("action", 'lt_ajax_create_new_job')
@@ -331,11 +298,11 @@ jQuery(function ($) {
                 //console.log(data)
 
                 $form.trigger("reset");
-                __removeAjaxLoading($wrap, classAddLoading);
+                helpers.__removeAjaxLoading($wrap, classAddLoading);
                 window.location.href = data.url;
             } catch (e) {
                 console.error(e)
-                __removeAjaxLoading($wrap, classAddLoading)
+                helpers.__removeAjaxLoading($wrap, classAddLoading)
                 alert("Have something error!")
             }
         }
@@ -352,7 +319,7 @@ jQuery(function ($) {
                 } else if ($(e).hasClass('__lt-checkbox-group')) {
                     valid = $(e).find('input[type="checkbox"]:checked').length > 0;
                 }
-                if (!isValidRequired(e, valid)) return
+                if (!helpers.isValidRequired(e, valid)) return
             }
 
             __ajax();
@@ -427,19 +394,20 @@ jQuery(function ($) {
     }
     $(document).ready(function () {
         document.querySelectorAll('.__lt-range-slider')
-        .forEach(range => range.querySelectorAll('input')
-        .forEach((input) => {
-            if (input.type === 'range') {
-                input.oninput = (e) => onInput(range, e);
-                onInput(range);
-            }
-        }))
+            .forEach(range => range.querySelectorAll('input')
+                .forEach((input) => {
+                    if (input.type === 'range') {
+                        input.oninput = (e) => onInput(range, e);
+                        onInput(range);
+                    }
+                }))
         FilterBarista();
         RegisterBarista();
         CreateJob();
         ContactAction();
         HandleModal();
         GotoBaristaProfile();
+        FilterJobs();
     });
     $(window).on('load', () => {
     });

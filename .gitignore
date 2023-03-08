@@ -1,0 +1,4 @@
+node_modules/
+/inc/yarn.lock
+*/.parcel-cache
+/inc/.parcel-cache/

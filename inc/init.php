@@ -6,4 +6,7 @@
  */
 
 require get_stylesheet_directory() . '/inc/functions.php';
+require get_stylesheet_directory() . '/inc/business-func.php';
+require get_stylesheet_directory() . '/inc/barista-func.php';
+require get_stylesheet_directory() . '/inc/job-functions.php';
 require get_stylesheet_directory() . '/inc/hooks.php';

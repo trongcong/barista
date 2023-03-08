@@ -3,9 +3,11 @@
     font-weight: 500;
     max-width: 800px;
     margin: auto;
+
     .__lt-inner-create-job {
         @extend %ajax-loading;
     }
+
     .__ltrg-content {
         .__ltrg-inner {
             .__lt-btn-create {
@@ -16,6 +18,15 @@
                 &:disabled {
                     opacity: .5;
                     cursor: not-allowed;
+                }
+            }
+
+            .job-tax-wrap {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-gap: 5px 20px;
+                @include media-breakpoint-down(sm) {
+                    grid-template-columns: 1fr;
                 }
             }
         }

@@ -21,7 +21,7 @@ function lt_acf_json_load_point( $paths ) {
 
 add_filter( "ocean_post_layout_class", "filter_ocean_post_layout_class" );
 function filter_ocean_post_layout_class( $class ) {
-	if ( is_singular( "barista" ) ) {
+	if ( is_singular( "barista" ) || is_singular( "job" ) ) {
 		$class = "full-width";
 	}
 
@@ -54,14 +54,6 @@ function lt_add_page_header( $title ) {
 		<?php
 	}
 }
-
-//add_filter( 'ocean_main_metaboxes_post_types', 'filter_oceanwp_metabox', 20 );
-//function filter_oceanwp_metabox( $types ) {
-//	$types[] = 'barista';
-//
-//	// Return
-//	return $types;
-//}
 
 add_action( 'wp_ajax_lt_ajax_filter_barista', 'lt_ajax_filter_barista' );
 add_action( 'wp_ajax_nopriv_lt_ajax_filter_barista', 'lt_ajax_filter_barista' );
@@ -109,7 +101,6 @@ function lt_ajax_filter_barista() {
 	}
 	$items = ob_get_clean();
 	$items = empty( $items ) ? $not_found : $items;
-	//sleep(100);
 	wp_send_json( [
 		"items"       => $items,
 		"count"       => $i,
@@ -201,9 +192,6 @@ function lt_ajax_create_new_barista() {
 	update_field( "re_active_profile", $date_of_post, $post_id );
 	update_field( "barista_profile_id", $post_id, "user_" . get_current_user_id() );
 
-	$u = new WP_User( get_current_user_id() );
-	$u->set_role( 'barista' );
-
 	wp_send_json( [
 		'id'             => $post_id,
 		'attachment_ids' => $attachment_ids,
@@ -223,6 +211,7 @@ function lt_ajax_create_new_job() {
 	$job_type              = isset( $_POST['job_type'] ) ? array_map( 'intval', $_POST['job_type'] ) : [];
 	$job_compensation      = isset( $_POST['job_compensation'] ) ? array_map( 'intval', $_POST['job_compensation'] ) : [];
 	$job_compensation_type = isset( $_POST['job_compensation_type'] ) ? array_map( 'intval', $_POST['job_compensation_type'] ) : [];
+	$job_experience        = isset( $_POST['job_experience'] ) ? array_map( 'intval', $_POST['job_experience'] ) : [];
 
 	$post_data = array(
 		'post_title'     => wp_strip_all_tags( $title ),
@@ -242,7 +231,8 @@ function lt_ajax_create_new_job() {
 			"job_location",
 			"job_type",
 			"job_compensation",
-			"job_compensation_type"
+			"job_compensation_type",
+			"job_experience",
 		] ) ) {
 			update_field( $key, $value, $post_id );
 		}
@@ -259,12 +249,24 @@ function lt_ajax_create_new_job() {
 	if ( ! empty( $job_compensation_type ) ) {
 		wp_set_post_terms( $post_id, $job_compensation_type, "job_compensation_type" );
 	}
+	if ( ! empty( $job_experience ) ) {
+		wp_set_post_terms( $post_id, $job_experience, "job_experience" );
+	}
 
 	$attachment_ids = [];
 	foreach ( $_FILES as $key => $file ) {
-		$attachment_id = upload_file_to_media( $file['name'], $file["tmp_name"] );
-		update_field( $key, $attachment_id, $post_id );
-		$attachment_ids[] = $attachment_id;
+		if ( ! is_array( $file['tmp_name'] ) ) {
+			$attachment_id = upload_file_to_media( $file['name'], $file["tmp_name"] );
+			update_field( $key, $attachment_id, $post_id );
+			$attachment_ids[] = $attachment_id;
+		}
+		if ( $key == 'upload_your_image' ) {
+			foreach ( $file['tmp_name'] as $index => $v ) {
+				$attachment_id = upload_file_to_media( $file['name'][ $index ], $file['tmp_name'][ $index ] );
+				add_row( $key, [ 'photo_item' => $attachment_id ], $post_id );
+				$attachment_ids[] = $attachment_id;
+			}
+		}
 	}
 
 	wp_send_json( [
@@ -293,8 +295,8 @@ function lt_ajax_contact_action() {
 	wp_die();
 }
 
-add_action( 'acf/save_post', 'update_barista' );
-function update_barista( $post_id ) {
+add_action( 'acf/save_post', 'fs_update_barista' );
+function fs_update_barista( $post_id ) {
 	if ( get_post_type( $post_id ) !== 'barista' || is_admin() ) {
 		return;
 	}
@@ -323,9 +325,6 @@ function lt_cta_contact() {
 	}
 }
 
-add_role( 'barista', __( 'Barista' ), array() );
-add_role( 'business', __( 'Business' ), array() );
-
 //add_action( 'wp_trash_post', 'lt_add_action_before_delete_post', 99, 2 );
 add_action( 'before_delete_post', 'lt_add_action_before_delete_post', 99, 2 );
 function lt_add_action_before_delete_post( $postid, $post ) {
@@ -337,9 +336,11 @@ function lt_add_action_before_delete_post( $postid, $post ) {
 	delete_field( 'barista_profile_id', 'user_' . $author_id );
 }
 
-
 add_filter( 'um_account_page_default_tabs_hook', 'lt_add_filter_um_account_page_default_tabs_hook', 100 );
 function lt_add_filter_um_account_page_default_tabs_hook( $tabs ) {
+	if ( ! can_show_barista_profile_tab() ) {
+		return $tabs;
+	}
 	$title = 'Update Barista Profile';
 	if ( ! can_edit_barista_profile() ) {
 		$title = 'Register Barista Profile';

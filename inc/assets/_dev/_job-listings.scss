@@ -1,0 +1,295 @@
+.__job-item {
+    border: 1px solid #E9E9E9;
+    border-radius: 4px;
+    background: #fff;
+    -webkit-transition: all 0.2s ease-in-out 0s;
+    -o-transition: all 0.2s ease-in-out 0s;
+    transition: all 0.2s ease-in-out 0s;
+    padding: 1.875rem 1.875rem 18px;
+    position: relative;
+    overflow: hidden;
+
+    &._is-expiration {
+        background: #e9e9e96e;
+        opacity: .8;
+
+        &:before {
+            content: '';
+            width: 40px;
+            height: 40px;
+            display: block;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: url('data:image/png;base64,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') no-repeat center center;
+            background-size: contain;
+        }
+    }
+
+    &:hover {
+        -webkit-box-shadow: 0 6px 15px 0 rgb(64 79 104 / 5%);
+        box-shadow: 0 6px 15px 0 rgb(64 79 104 / 5%);
+    }
+
+    &.item-not-found {
+        grid-column: 1 /4;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .__item-top {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+
+        .__avatar {
+            flex: 0 0 60px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .__name > a {
+            font-weight: 600;
+            font-size: 16px;
+            margin: 0;
+            color: $main-color;
+            text-transform: capitalize;
+        }
+    }
+
+    .__item-meta {
+        .job-title {
+            margin-bottom: 10px;
+
+            a {
+                &:hover {
+                    color: $main-color;
+                }
+            }
+        }
+
+        .job-salary {
+            margin-top: 5px;
+            font-weight: 500;
+            color: #222;
+            font-size: 14px;
+        }
+
+        .__job-info {
+            display: flex;
+            flex-wrap: wrap;
+            line-height: 1.2;
+            gap: 10px 0;
+            font-size: 14px;
+            margin-top: 10px;
+
+            > div {
+                &:not(:last-child) {
+                    margin-right: 10px;
+                    padding-right: 10px;
+                    border-right: 1px solid #ccc;
+                }
+            }
+        }
+    }
+}
+
+.__job-filter-content {
+    .__job-filter-top {
+        margin-left: calc((100% - 100vw) / 2);
+        margin-right: calc((100% - 100vw) / 2);
+        background-size: cover;
+        background: #FFEDE8 url("./images/job-listing-bg.jpg") no-repeat top center;
+        padding: 40px 0;
+        @include media-breakpoint-up(xl) {
+            padding: 60px 0;
+        }
+
+        &-inner {
+            > h2 {
+                color: #222222;
+                font-size: 32px;
+            }
+
+            > h3 {
+                color: $title-color;
+                font-size: 18px;
+                font-weight: normal;
+            }
+
+            > form {
+                .main-inner {
+                    display: grid;
+                    grid-gap: 20px;
+                    grid-template-columns: repeat(1, 1fr);
+                    @include media-breakpoint-up(sm) {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                    @include media-breakpoint-up(md) {
+                        grid-template-columns: repeat(4, 1fr);
+                    }
+
+                    .form-item {
+                        &:nth-child(1),
+                        &:last-child {
+                            grid-column: 1 / 2;
+                            grid-template-columns: repeat(1, 1fr);
+                            @include media-breakpoint-up(sm) {
+                                grid-column: 1 / 3;
+                            }
+                            @include media-breakpoint-up(md) {
+                                grid-column: 1 / 5;
+                            }
+                        }
+
+                        .--inner {
+                            position: relative;
+
+                            > i {
+                                position: absolute;
+                                z-index: 1;
+                                top: 50%;
+                                left: 10px;
+                                transform: translateY(-50%);
+                                line-height: 1;
+                                font-size: 20px;
+                            }
+
+                            input, select {
+                                @extend %input-style;
+                                padding-top: 16px !important;
+                                padding-right: 20px;
+                                padding-left: 20px;
+                                padding-bottom: 16px !important;
+                                border: transparent;
+                                border-radius: 4px;
+                                font-size: 15px;
+                            }
+
+                            input[name="filter-title"] {
+                                padding-left: 40px;
+                            }
+
+                            select {
+                                appearance: auto;
+                                height: auto;
+                            }
+
+                            .btn-submit-filter {
+                                @extend %button-style;
+                                border-radius: 4px;
+                                padding: 20px;
+                                background: #1F4B3F;
+                                margin: auto;
+                                display: block;
+                                min-width: 200px;
+                                width: 100%;
+                                @include media-breakpoint-up(sm) {
+                                    width: auto;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .__job-filter-inner-wrap {
+        padding: 40px 0;
+        @include media-breakpoint-up(xl) {
+            padding: 60px 0;
+        }
+    }
+
+    .results-filter-wrapper {
+        margin-bottom: 20px;
+
+        > .title {
+            font-weight: 500;
+            font-size: 18px;
+            margin: 0 0 20px;
+        }
+
+        .inner {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-flex;
+            display: -ms-flexbox;
+            display: flex;
+            gap: 10px;
+
+            > a {
+                margin-left: auto;
+                color: #dc3545;
+                font-weight: 600;
+                white-space: nowrap;
+                font-size: 14px;
+            }
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 10px;
+
+            li a {
+                font-size: 13px;
+                font-weight: 500;
+                padding: 3px 10px;
+                border-radius: 4px;
+                background-color: #FFEDE8;
+                transition: all 0.3s ease-in-out 0s;
+                color: black;
+                display: inline-flex;
+                gap: 5px;
+
+                > span {
+                    color: #dc3545;
+                }
+
+                &:hover {
+                    opacity: .7;
+                }
+            }
+        }
+    }
+
+    .wrapper-fillter {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        select {
+            @extend %input-style;
+            padding-top: 14px !important;
+            padding-right: 16px;
+            padding-left: 16px;
+            padding-bottom: 14px !important;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        select {
+            appearance: auto;
+            height: auto;
+        }
+    }
+
+    .__job-filter-content-side {
+        position: relative;
+        @extend %ajax-loading;
+    }
+
+    .__job-filter-items-wrap {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 30px;
+        margin-top: 30px;
+    }
+}

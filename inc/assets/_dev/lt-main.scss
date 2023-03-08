@@ -6,11 +6,14 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
+@import "fonts/flaticon/flaticon.css";
 @import "range-slider";
 @import "listings";
 @import "register-barista";
 @import "single";
 @import "create-jobs";
+@import "single-job";
+@import "job-listings";
 
 form textarea {
     background: #fff;
@@ -45,6 +48,8 @@ form textarea {
     }
 }
 
+.single-job header#site-header,
+.page-template-page-job-listings header#site-header,
 .um-page-loggedin header#site-header,
 .um-page-loggedout header#site-header,
 .single-barista header#site-header,
