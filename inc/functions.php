@@ -49,6 +49,7 @@ function get_lt_item( $id ) {
                     </a>
                 </div>
                 <div class="__name-wrap">
+                    <div class="__published"><?=get_the_date('', $id)?></div>
                     <div class="__name"><a href="<?= get_the_permalink( $id ) ?>"><?= get_the_title( $id ) ?></a></div>
 	                <?php
 	                $certification = get_certification_by_barista( $id );
