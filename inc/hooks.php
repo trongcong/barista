@@ -40,17 +40,17 @@ function filter_ocean_display_page_header( $return ) {
 //add_action( "ocean_before_content_wrap", "add_action_ocean_before_content_wrap", 20 );
 function lt_add_page_header( $title ) {
 	if ( is_singular( "barista" ) ) { ?>
-        <header class="page-header background-image-page-header hide-all-devices" style="
+		<header class="page-header background-image-page-header hide-all-devices" style="
             background-image: url(https://firstshotbaristatraining.com.au/wp-content/uploads/2019/05/cover.jpg);
             background-position: center;
         ">
-            <div class="container clr page-header-inner">
-                <h1 class="page-header-title clr" itemprop="headline">
-                <span class="__thanks"><?= $title ?></span>
-                </h1>
-            </div>
-            <span class="background-image-page-header-overlay"></span>
-        </header>
+			<div class="container clr page-header-inner">
+				<h1 class="page-header-title clr" itemprop="headline">
+					<span class="__thanks"><?= $title ?></span>
+				</h1>
+			</div>
+			<span class="background-image-page-header-overlay"></span>
+		</header>
 		<?php
 	}
 }
@@ -73,24 +73,26 @@ function lt_ajax_filter_barista() {
 	$query     = create_query_barista( $year_exp_min, $year_exp_max, $year_exp_aus_min, $year_exp_aus_max, $barista_skills, $volumes, $hospitality_skills );
 	$not_found = '<div class="__lt-item item-not-found">Sorry, no barista matched your criteria.</div>';
 
+	function areAllElementsExistInArray( $list, $listCheck ) {
+		$intersect = array_intersect( $list, $listCheck );
+
+		return count( $intersect ) === count( $listCheck );
+	}
+
 	$i = 0;
 	ob_start();
 	if ( $query->have_posts() ) {
 		while ( $query->have_posts() ) {
 			$query->the_post();
-			$certification = get_certification_by_barista( get_the_ID() );
+			$certification = get_certification_by_barista( get_the_ID(), true );
+
 			if ( empty( $training_certification ) ) {
 				get_lt_item( get_the_ID() );
 				$i ++;
 			} else {
-				if ( count( $training_certification ) == 1 && in_array( $training_certification[0], $certification ) ) {
+				if ( areAllElementsExistInArray( $certification, $training_certification ) ) {
 					get_lt_item( get_the_ID() );
 					$i ++;
-				} else {
-					if ( in_array( $certification, [ $training_certification ] ) ) {
-						get_lt_item( get_the_ID() );
-						$i ++;
-					}
 				}
 			}
 		}
@@ -311,16 +313,17 @@ function fs_update_barista( $post_id ) {
 add_action( 'wp_footer', 'lt_cta_contact' );
 function lt_cta_contact() {
 	if ( is_single() && get_post_type() === "barista" ) { ?>
-        <div class="__cta __contact-item">
-            <a href="tel:0123456">
-                <span>Contact me</span>
-                <span class="__svg">
+		<div class="__cta __contact-item">
+			<a href="tel:0123456">
+				<span>Contact me</span>
+				<span class="__svg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-                      <path fill-rule="evenodd" d="M3.6 7.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V17c0 .6-.4 1-1 1C7.6 18 0 10.4 0 1c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1L3.6 7.8Z" />
+                      <path fill-rule="evenodd"
+                            d="M3.6 7.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V17c0 .6-.4 1-1 1C7.6 18 0 10.4 0 1c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1L3.6 7.8Z"/>
                     </svg>
                 </span>
-            </a>
-        </div>
+			</a>
+		</div>
 		<?php
 	}
 }
@@ -370,7 +373,7 @@ function um_account_tab_profile_barista( $info ) {
 add_filter( 'um_account_content_hook_profile_barista', 'um_account_content_hook_profile_barista' );
 function um_account_content_hook_profile_barista( $output ) {
 	ob_start(); ?>
-    <div class="um-field">
+	<div class="um-field">
 		<?php if ( can_edit_barista_profile() ) {
 			echo '<a href="' . ( get_barista_profile_link() ) . '">Update Barista Profile Now</a>';
 		} else {
@@ -445,4 +448,91 @@ function active_code_custom_column_values( $column, $post_id ) {
 			}
 			break;
 	}
+}
+
+add_filter( 'manage_advanced_code_posts_columns', 'custom_columns_list_for_advanced_code' );
+function custom_columns_list_for_advanced_code( $columns ) {
+	$columns['advanced_code'] = 'Advanced Code';
+	$columns['used_by']       = 'User By';
+
+	return $columns;
+}
+
+add_action( 'manage_advanced_code_posts_custom_column', 'advanced_code_custom_column_values', 10, 2 );
+function advanced_code_custom_column_values( $column, $post_id ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return;
+	}
+	$advanced_code = get_field( 'advanced_code', $post_id );
+
+	$query_advanced_code_used = new WP_Query( [
+		'post_type'      => 'barista',
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+		'meta_query'     => [
+			array(
+				'key'     => 'advanced_code',
+				'value'   => $advanced_code,
+				'compare' => '=',
+			)
+		]
+	] );
+
+	switch ( $column ) {
+		case 'advanced_code'    :
+			echo '<code style="padding: 5px;">' . $advanced_code . '</code>';
+
+			break;
+		case 'used_by':
+			if ( ! $query_advanced_code_used->found_posts ) {
+				echo '<code style="padding: 5px;">Unused</code>';
+			} else {
+				$post_title = $query_advanced_code_used->post->post_title;
+				echo '<code style="padding: 5px;">Used by <a href="' . admin_url( '/edit.php?s=' . $post_title . '&post_status=all&post_type=barista' ) . '">' . $post_title . '</a></code>';
+			}
+			break;
+	}
+}
+
+add_filter( 'acf/validate_value/key=field_65844e8455881', 'filter_acf_validate_update_advanced_code', 99, 4 );
+function filter_acf_validate_update_advanced_code( $valid, $value, $field, $input ) {
+	$post_id = $_POST['_acf_post_id'] ?? $_POST['post_id'];
+	if ( ! $value || ! $post_id ) {
+		return $valid;
+	}
+
+	$query_advanced_code      = new WP_Query( [
+		'post_type'      => 'advanced_code',
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+		'meta_query'     => [
+			array(
+				'key'     => 'advanced_code',
+				'value'   => $value,
+				'compare' => '=',
+			)
+		]
+	] );
+	$query_advanced_code_used = new WP_Query( [
+		'post_type'      => 'barista',
+		'post_status'    => 'publish',
+		'posts_per_page' => 1,
+		'post__not_in'   => [ $post_id ],
+		'meta_query'     => [
+			array(
+				'key'     => 'advanced_code',
+				'value'   => $value,
+				'compare' => '=',
+			)
+		]
+	] );
+
+	if ( ! $query_advanced_code->found_posts ) {
+		return "Advanced code not found!";
+	}
+	if ( $query_advanced_code_used->found_posts ) {
+		return "Advanced code already used!";
+	}
+
+	return $valid;
 }

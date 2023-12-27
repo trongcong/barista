@@ -43,51 +43,54 @@ function get_lt_item( $id ) {
         <div class="__lt-item-inner">
             <div class="__inner-wrap">
                 <div class="__item-top">
-                <div class="__avatar">
-                    <a href="<?= get_the_permalink( $id ) ?>">
-                        <img src="<?= get_barista_avatar( $id ) ?>" alt="avatar">
-                    </a>
-                </div>
-                <div class="__name-wrap">
-                    <div class="__published"><?=get_the_date('', $id)?></div>
-                    <div class="__name"><a href="<?= get_the_permalink( $id ) ?>"><?= get_the_title( $id ) ?></a></div>
-	                <?php
-	                $certification = get_certification_by_barista( $id );
-	                if ( ! empty( $certification ) ) {
-		                foreach ( $certification as $cer ) {
-			                echo '<div class="__exp">🏅' . $cer . '</div>';
-		                }
-	                }
-	                ?>
-                </div>
+                    <div class="__avatar">
+                        <a href="<?= get_the_permalink( $id ) ?>">
+                            <img src="<?= get_barista_avatar( $id ) ?>" alt="avatar">
+                        </a>
+                    </div>
+                    <div class="__name-wrap">
+                        <div class="__published">Activated: <?= get_the_date( 'd M Y', $id ) ?></div>
+                        <div class="__name"><a href="<?= get_the_permalink( $id ) ?>"><?= get_the_title( $id ) ?></a>
+                        </div>
+						<?php
+						$certification = get_certification_by_barista( $id );
+						if ( ! empty( $certification ) ) {
+							foreach ( $certification as $cer ) {
+								echo '<div class="__exp">🏅' . $cer . '</div>';
+							}
+						}
+						?>
+                    </div>
                 </div>
                 <div class="__item-meta">
                     <div class="__num-exp">
-                        Barista Experience (Years): <strong><?= get_field( "years_of_experience", $id )['value'] ?></strong>
+                        Barista Experience (Years):
+                        <strong><?= get_field( "years_of_experience", $id )['value'] ?></strong>
                     </div>
                     <div class="__viewed">
                         Viewed: <strong><?= get_barista_view( $id ) ?></strong>
                     </div>
                     <div class="__num-exp-aus">
-                        Retail or Hospitality Experience: <strong><?= get_field( "experience_in_australia", $id )['value'] ?></strong>
+                        Retail or Hospitality Experience:
+                        <strong><?= get_field( "experience_in_australia", $id )['value'] ?></strong>
                     </div>
                     <div class="__contacted">
                         Contacted: <strong><?= get_barista_contacted( $id ) ?></strong>
                     </div>
                 </div>
                 <div class="__description">
-                    <?= get_field( "describe_yourself_in_2_sentences", $id ) ?>
+					<?= get_field( "describe_yourself_in_2_sentences", $id ) ?>
                 </div>
             </div>
             <div class="__detail">
                 <a href="<?= get_the_permalink( $id ) ?>">
-                    <?php
-                    if ( intval( $exp ) > 7 ) {
-	                    echo "Click Here To See Everything I Can Do";
-                    } else {
-	                    echo "I am still looking for more work. Contact me";
-                    }
-                    ?>
+					<?php
+					if ( intval( $exp ) > 7 ) {
+						echo "Click Here To See Everything I Can Do";
+					} else {
+						echo "I am still looking for more work. Contact me";
+					}
+					?>
                 </a>
             </div>
         </div>
@@ -142,7 +145,7 @@ function render_tag_from_acf_fields( $field ) {
 			foreach ( $field['choices'] as $key => $choice ) { ?>
                 <div class="__lt-checkbox">
                     <label>
-                        <input name="<?= $field['name'] ?>[]" type="checkbox" value="<?= $key ?>" />
+                        <input name="<?= $field['name'] ?>[]" type="checkbox" value="<?= $key ?>"/>
                         <span><?= $choice ?></span>
                     </label>
                 </div>
@@ -154,9 +157,9 @@ function render_tag_from_acf_fields( $field ) {
             <label>
                 <span><?= $field['label'] ?><?= $label_required ?></span>
                 <select name="<?= $field['name'] ?>" <?= $field['required'] ? 'required' : '' ?>>
-                    <?php foreach ( $field['choices'] as $key => $choice ) {
-	                    echo "<option value='" . $key . "'>" . $choice . "</option>";
-                    } ?>
+					<?php foreach ( $field['choices'] as $key => $choice ) {
+						echo "<option value='" . $key . "'>" . $choice . "</option>";
+					} ?>
                 </select>
             </label>
         </div>
@@ -165,7 +168,8 @@ function render_tag_from_acf_fields( $field ) {
         <div class="__lt-input <?= $class_required ?>">
             <label>
                 <span><?= $field['label'] ?><?= $label_required ?></span>
-                <textarea maxlength="<?= $field['maxlength'] ?>" name="<?= $field['name'] ?>" <?= $field['required'] ? 'required' : '' ?>></textarea>
+                <textarea maxlength="<?= $field['maxlength'] ?>"
+                          name="<?= $field['name'] ?>" <?= $field['required'] ? 'required' : '' ?>></textarea>
             </label>
         </div>
 		<?php
@@ -187,7 +191,8 @@ function render_tag_from_acf_fields( $field ) {
         <div class="__lt-input <?= $class_required ?>">
             <label>
                 <span><?= $field['label'] ?><?= $label_required ?></span>
-                <input <?= $mime_types ?> name="<?= $field['name'] ?>" type="<?= $type ?>" placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
+                <input <?= $mime_types ?> name="<?= $field['name'] ?>" type="<?= $type ?>"
+                                          placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
             </label>
         </div>
 		<?php
@@ -195,7 +200,8 @@ function render_tag_from_acf_fields( $field ) {
         <div class="__lt-input <?= $class_required ?>">
             <label>
                 <span><?= $field['label'] ?><?= $label_required ?></span>
-                <input multiple accept="image/*" name="<?= $field['name'] ?>[]" type="file" placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
+                <input multiple accept="image/*" name="<?= $field['name'] ?>[]" type="file"
+                       placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
             </label>
         </div>
 		<?php
@@ -203,7 +209,8 @@ function render_tag_from_acf_fields( $field ) {
         <div class="__lt-input <?= $class_required ?>">
             <label>
                 <span><?= $field['label'] ?><?= $label_required ?></span>
-                <input name="<?= $field['name'] ?>" type="date" placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
+                <input name="<?= $field['name'] ?>" type="date"
+                       placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
             </label>
         </div>
 		<?php
@@ -227,15 +234,15 @@ function render_tag_from_job_taxonomies() {
             <div class="__ltrg-item">
                 <div class="__lt-checkbox-group">
                     <span><?= $taxonomy->label ?></span>
-	                <?php
-	                foreach ( $terms as $key_term => $term ) { ?>
+					<?php
+					foreach ( $terms as $key_term => $term ) { ?>
                         <div class="__lt-checkbox">
                             <label>
-                                <input name="<?= $tax ?>[]" type="checkbox" value="<?= $key_term ?>" />
+                                <input name="<?= $tax ?>[]" type="checkbox" value="<?= $key_term ?>"/>
                                 <span><?= $term ?></span>
                             </label>
                         </div>
-	                <?php } ?>
+					<?php } ?>
                 </div>
             </div>
 			<?php
@@ -258,95 +265,90 @@ function get_number_of_days_from_date_to_now( $from ) {
 }
 
 function lt_filter_group() {
-	$barista_skills     = acf_get_field( "field_625cf654af1dc" )["choices"];
-	$volumes            = acf_get_field( "field_62887394b3a58" )["choices"];
-	$hospitality_skills = acf_get_field( "field_625cf65daf1de" )["choices"];
+	$barista_skills          = acf_get_field( "field_625cf654af1dc" )["choices"];
+	$volumes                 = acf_get_field( "field_62887394b3a58" )["choices"];
+	$hospitality_skills      = acf_get_field( "field_625cf65daf1de" )["choices"];
+	$training_certifications = acf_get_field( "field_6583018dc732d" )['choices'];
 	?>
     <div class="__lt-filter-group">
         <h4 class="__lt-filter-title">First Shot Barista Training Certification</h4>
         <div class="__lt-filter-checkbox-group">
-            <div class="__lt-checkbox">
-                <label>
-                    <input name="training_certification[]" type="checkbox" value="Professional Training" />
-                    <span>Professional Training</span>
-                </label>
-            </div>
-            <div class="__lt-checkbox">
-                <label>
-                    <input name="training_certification[]" type="checkbox" value="Basic Sensory" />
-                    <span>Basic Sensory</span>
-                </label>
-            </div>
-            <div class="__lt-checkbox">
-                <label>
-                    <input name="training_certification[]" type="checkbox" value="Advanced Sensory" />
-                    <span>Advanced Sensory</span>
-                </label>
-            </div>
+			<?php foreach ( $training_certifications as $cert ) { ?>
+                <div class="__lt-checkbox">
+                    <label>
+                        <input name="training_certification[]" type="checkbox" value="<?= trim( $cert ) ?>"/>
+                        <span><?= trim( $cert ) ?></span>
+                    </label>
+                </div>
+			<?php } ?>
         </div>
     </div>
 
     <div class="__lt-filter-group">
         <h4 class="__lt-filter-title">Barista Experience (Years)</h4>
         <div class="__lt-range-slider">
-          <input name="year_exp_min" type="range" min="0.5" max="10" step="0.5" value="0.5" class="__lt-range-slider__input" />
-          <input name="year_exp_max" type="range" min="0.5" max="10" step="0.5" value="10" class="__lt-range-slider__input" />
-          <div class="__lt-range-slider__display">
-            <!-- This node is optional and only used to display the current values -->
-          </div>
+            <input name="year_exp_min" type="range" min="0.5" max="10" step="0.5" value="0.5"
+                   class="__lt-range-slider__input"/>
+            <input name="year_exp_max" type="range" min="0.5" max="10" step="0.5" value="10"
+                   class="__lt-range-slider__input"/>
+            <div class="__lt-range-slider__display">
+                <!-- This node is optional and only used to display the current values -->
+            </div>
         </div>
     </div>
 
     <div class="__lt-filter-group">
         <h4 class="__lt-filter-title">Retail or Hospitality Experience</h4>
         <div class="__lt-range-slider">
-          <input name="year_exp_aus_min" type="range" min="0.5" max="10" step="0.5" value="0.5" class="__lt-range-slider__input" />
-          <input name="year_exp_aus_max" type="range" min="0.5" max="10" step="0.5" value="10" class="__lt-range-slider__input" />
-          <div class="__lt-range-slider__display">
-            <!-- This node is optional and only used to display the current values -->
-          </div>
+            <input name="year_exp_aus_min" type="range" min="0.5" max="10" step="0.5" value="0.5"
+                   class="__lt-range-slider__input"/>
+            <input name="year_exp_aus_max" type="range" min="0.5" max="10" step="0.5" value="10"
+                   class="__lt-range-slider__input"/>
+            <div class="__lt-range-slider__display">
+                <!-- This node is optional and only used to display the current values -->
+            </div>
         </div>
     </div>
 
     <div class="__lt-filter-group">
         <h4 class="__lt-filter-title">Barista skills</h4>
         <div class="__lt-filter-checkbox-group">
-            <?php foreach ( $barista_skills as $skill ) { ?>
+			<?php foreach ( $barista_skills as $skill ) { ?>
                 <div class="__lt-checkbox">
                     <label>
-                        <input name="barista_skills[]" type="checkbox" value="<?= trim( $skill ) ?>" />
+                        <input name="barista_skills[]" type="checkbox" value="<?= trim( $skill ) ?>"/>
                         <span><?= trim( $skill ) ?></span>
                     </label>
                 </div>
-            <?php } ?>
+			<?php } ?>
         </div>
     </div>
 
     <div class="__lt-filter-group">
         <h4 class="__lt-filter-title">Volume</h4>
         <div class="__lt-filter-checkbox-group">
-            <?php foreach ( $volumes as $v ) { ?>
+			<?php foreach ( $volumes as $v ) { ?>
                 <div class="__lt-checkbox">
                     <label>
-                        <input name="volumes[]" type="checkbox" value="<?= $v ?>" />
+                        <input name="volumes[]" type="checkbox" value="<?= $v ?>"/>
                         <span><?= $v ?></span>
                     </label>
                 </div>
-            <?php } ?>
+			<?php } ?>
         </div>
     </div>
 
     <div class="__lt-filter-group">
         <h4 class="__lt-filter-title">Hospitality skills</h4>
         <div class="__lt-filter-checkbox-group">
-            <?php foreach ( $hospitality_skills as $v ) { ?>
+			<?php foreach ( $hospitality_skills as $v ) { ?>
                 <div class="__lt-checkbox">
                     <label>
-                        <input name="hospitality_skills[]" type="checkbox" value="<?= $v ?>" />
+                        <input name="hospitality_skills[]" type="checkbox" value="<?= $v ?>"/>
                         <span><?= $v ?></span>
                     </label>
                 </div>
-            <?php } ?>
+			<?php } ?>
         </div>
     </div>
 	<?php
@@ -362,13 +364,14 @@ function lt_filter_modal() { ?>
                         <span class="sr-only">Close the dialog</span>
                         <span class="up-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 14 14" role="img">
-                                <polygon fill-rule="evenodd" points="12.524 0 7 5.524 1.476 0 0 1.476 5.524 7 0 12.524 1.476 14 7 8.476 12.524 14 14 12.524 8.476 7 14 1.476"></polygon>
+                                <polygon fill-rule="evenodd"
+                                         points="12.524 0 7 5.524 1.476 0 0 1.476 5.524 7 0 12.524 1.476 14 7 8.476 12.524 14 14 12.524 8.476 7 14 1.476"></polygon>
                             </svg>
                         </span>
                     </button>
                 </div>
                 <div class="__filter-popup-group">
-                    <?php lt_filter_group() ?>
+					<?php lt_filter_group() ?>
                 </div>
             </div>
         </div>

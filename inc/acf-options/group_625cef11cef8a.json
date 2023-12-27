@@ -3,6 +3,26 @@
     "title": "Baristas",
     "fields": [
         {
+            "key": "field_65844e8455881",
+            "label": "Advanced Code",
+            "name": "advanced_code",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_625cef2b13c9c",
             "label": "Full Name",
             "name": "full_name",
@@ -127,7 +147,7 @@
                 "id": ""
             },
             "default_value": "",
-            "maxlength": 150,
+            "maxlength": 250,
             "rows": "",
             "placeholder": "",
             "new_lines": ""
@@ -291,7 +311,7 @@
             "aria-label": "",
             "type": "url",
             "instructions": "",
-            "required": 1,
+            "required": 0,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -346,7 +366,7 @@
                     "max_height": "",
                     "max_size": "",
                     "mime_types": "",
-                    "preview_size": "thumbnail",
+                    "preview_size": "medium",
                     "parent_repeater": "field_63eefd1519400"
                 }
             ]
@@ -390,5 +410,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1676819147
+    "modified": 1703169744
 }

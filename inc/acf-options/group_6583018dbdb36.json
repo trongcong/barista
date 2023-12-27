@@ -1,11 +1,11 @@
 {
-    "key": "group_63dd2dbddce0e",
-    "title": "Active Code Options",
+    "key": "group_6583018dbdb36",
+    "title": "Advanced Code Options",
     "fields": [
         {
-            "key": "field_63dd2eb75de9f",
-            "label": "Active Code",
-            "name": "active_code",
+            "key": "field_6583018dc7326",
+            "label": "Advanced Code",
+            "name": "advanced_code",
             "aria-label": "",
             "type": "text",
             "instructions": "",
@@ -23,13 +23,13 @@
             "append": ""
         },
         {
-            "key": "field_63dd2dc2e2572",
+            "key": "field_6583018dc732d",
             "label": "Training Certification",
             "name": "training_certification",
             "aria-label": "",
             "type": "checkbox",
             "instructions": "",
-            "required": 0,
+            "required": 1,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -37,7 +37,12 @@
                 "id": ""
             },
             "choices": {
-                "Certified at FSBT with a professional program": "Certified at FSBT with a professional program"
+                "Basic Sensory": "Basic Sensory",
+                "Advanced Sensory": "Advanced Sensory",
+                "Latte Art Mastery": "Latte Art Mastery",
+                "Advanced Workflow Techniques": "Advanced Workflow Techniques",
+                "Coffee Extraction Mastery": "Coffee Extraction Mastery",
+                "Sensory Skills Upgrade": "Sensory Skills Upgrade"
             },
             "default_value": [],
             "return_format": "value",
@@ -52,7 +57,7 @@
             {
                 "param": "post_type",
                 "operator": "==",
-                "value": "active_code"
+                "value": "advanced_code"
             }
         ]
     ],
@@ -65,5 +70,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1703081082
+    "modified": 1703084565
 }

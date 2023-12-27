@@ -21,8 +21,8 @@
 	"browserslist": "> 0.5%, last 4 versions, not dead",
 	"scripts": {
 		"start": "parcel",
-		"b": "parcel build --no-source-maps --no-cache",
-		"w": "parcel watch --no-source-maps --no-cache"
+		"b": "rm -rf ./assets/css & parcel build --no-source-maps --no-cache",
+		"w": "rm -rf ./assets/css & parcel watch --no-source-maps --no-cache"
 	},
 	"devDependencies": {
 		"@parcel/transformer-sass": "2.8.2",

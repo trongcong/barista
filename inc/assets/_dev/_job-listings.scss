@@ -101,8 +101,9 @@
     .__job-filter-top {
         margin-left: calc((100% - 100vw) / 2);
         margin-right: calc((100% - 100vw) / 2);
+        background: #FFEDE8 url("./images/job-listing-bg.webp") no-repeat top center;
         background-size: cover;
-        background: #FFEDE8 url("./images/job-listing-bg.jpg") no-repeat top center;
+        background-position-x: right;
         padding: 40px 0;
         @include media-breakpoint-up(xl) {
             padding: 60px 0;

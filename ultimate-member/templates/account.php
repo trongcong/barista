@@ -1,4 +1,18 @@
-<?php if ( ! defined( 'ABSPATH' ) ) {
+<?php
+/**
+ * Template for the account page
+ *
+ * This template can be overridden by copying it to yourtheme/ultimate-member/templates/account.php
+ *
+ * Page: "Account"
+ *
+ * @version 2.8.0
+ *
+ * @var string $mode
+ * @var int    $form_id
+ * @var array  $args
+ */
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 $role = um_profile( 'role' );

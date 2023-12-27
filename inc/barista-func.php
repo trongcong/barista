@@ -75,14 +75,14 @@ function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_
 			'relation' => 'AND',
 			array(
 				'key'     => 'years_of_experience',
-				'value'   => $year_exp_min,
-				'type'    => 'DECIMAL',
+				'value'   => floatval( $year_exp_min ),
+				'type'    => 'DECIMAL(2,1)',
 				'compare' => '>=',
 			),
 			array(
 				'key'     => 'years_of_experience',
-				'value'   => $year_exp_max,
-				'type'    => 'DECIMAL',
+				'value'   => floatval( $year_exp_max ),
+				'type'    => 'DECIMAL(2,1)',
 				'compare' => '<=',
 			),
 		),
@@ -90,14 +90,14 @@ function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_
 			'relation' => 'AND',
 			array(
 				'key'     => 'experience_in_australia',
-				'value'   => $year_exp_aus_min,
-				'type'    => 'DECIMAL',
+				'value'   => floatval( $year_exp_aus_min ),
+				'type'    => 'DECIMAL(2,1)',
 				'compare' => '>=',
 			),
 			array(
 				'key'     => 'experience_in_australia',
-				'value'   => $year_exp_aus_max,
-				'type'    => 'DECIMAL',
+				'value'   => floatval( $year_exp_aus_max ),
+				'type'    => 'DECIMAL(2,1)',
 				'compare' => '<=',
 			),
 		),
@@ -105,11 +105,7 @@ function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_
 	if ( ! empty( $barista_skills ) ) {
 		$barista_skills_query = array( 'relation' => 'AND' );;
 		foreach ( $barista_skills as $item ) {
-			$barista_skills_query[] = array(
-				'key'     => 'barista_skills',
-				'value'   => $item,
-				'compare' => 'LIKE',
-			);
+			$barista_skills_query[] = array( 'key' => 'barista_skills', 'value' => $item, 'compare' => 'LIKE', );
 		}
 		$meta_query[] = $barista_skills_query;
 	}
@@ -153,30 +149,38 @@ function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_
  *
  * @return array
  */
-function get_certification_by_barista( $id ) {
-	$cer         = [];
-	$active_code = get_field( "active_code", $id );
+function get_certification_by_barista( $id, $advanced_code_only = false ) {
+	$cer               = [];
+	$cer_advanced_code = [];
+	$active_code       = get_field( "active_code", $id );
+	$advanced_code     = get_field( "advanced_code", $id );
 
-	$attrs = array(
+	$attrs               = array(
 		'post_type'      => 'active_code',
 		'post_status'    => 'publish',
 		'posts_per_page' => 2,
-		'meta_query'     => [
-			array(
-				'key'     => 'active_code',
-				'value'   => $active_code,
-				'compare' => '=',
-			)
-		]
+		'meta_query'     => [ array( 'key' => 'active_code', 'value' => $active_code, 'compare' => '=', ) ]
 	);
+	$attrs_advanced_code = array(
+		'post_type'      => 'advanced_code',
+		'post_status'    => 'publish',
+		'posts_per_page' => 2,
+		'meta_query'     => [ array( 'key' => 'advanced_code', 'value' => $advanced_code, 'compare' => '=', ) ]
+	);
+	$query_active_code   = new WP_Query( $attrs );
+	$query_advanced_code = new WP_Query( $attrs_advanced_code );
 
-	$query = new WP_Query( $attrs );
-	if ( $query->found_posts ) {
-		$code_id = $query->posts[0]->ID;
+	if ( $query_active_code->found_posts ) {
+		$code_id = $query_active_code->posts[0]->ID;
 		$cer     = get_field( "training_certification", $code_id );
 	}
+	if ( $query_advanced_code->found_posts ) {
+		$code_id           = $query_advanced_code->posts[0]->ID;
+		$cer_advanced_code = get_field( "training_certification", $code_id );
+		$cer               = array_merge( $cer, $cer_advanced_code );
+	}
 
-	return $cer;
+	return $advanced_code_only ? $cer_advanced_code : $cer;
 }
 
 add_action( 'wp_head', 'set_barista_view_count' );
