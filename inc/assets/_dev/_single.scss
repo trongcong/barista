@@ -318,6 +318,11 @@
     right: 20px;
     bottom: 25vh;
 
+    @include media-breakpoint-down(md) {
+        right: 10px;
+        bottom: 37vh;
+    }
+
     > a {
         display: flex;
         align-items: center;
