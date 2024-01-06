@@ -4,7 +4,7 @@
     "fields": [
         {
             "key": "field_65844e8455881",
-            "label": "Advanced Code",
+            "label": "Advanced Certificate (when you complete any advanced course)",
             "name": "advanced_code",
             "aria-label": "",
             "type": "text",
@@ -323,7 +323,7 @@
         },
         {
             "key": "field_63eefd1519400",
-            "label": "Your Photos",
+            "label": "Upload photos of you or your coffees",
             "name": "your_photos",
             "aria-label": "",
             "type": "repeater",
@@ -410,5 +410,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1703169744
+    "modified": 1704530351
 }
