@@ -72,6 +72,18 @@ function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_
 	$meta_query = array(
 		"relation" => "AND",
 		array(
+			'relation' => 'OR',
+			[
+				'key'     => 'barista_hide_profile',
+				'value'   => '',
+				'compare' => '=',
+			],
+			[
+				'key'     => 'barista_hide_profile',
+				'compare' => 'NOT EXISTS',
+			]
+		),
+		array(
 			'relation' => 'AND',
 			array(
 				'key'     => 'years_of_experience',
@@ -136,7 +148,7 @@ function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_
 		'post_type'      => 'barista',
 		'post_status'    => 'publish',
 		'order'          => 'DESC',
-		'orderby'        => 'ID',
+		'orderby'        => 'modified',
 		'posts_per_page' => 500,
 		'meta_query'     => $meta_query
 	);

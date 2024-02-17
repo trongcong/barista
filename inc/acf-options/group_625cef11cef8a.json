@@ -238,7 +238,8 @@
             "layout": "vertical",
             "toggle": 0,
             "return_format": "value",
-            "save_custom": 0
+            "save_custom": 0,
+            "custom_choice_button_text": "Add new choice"
         },
         {
             "key": "field_62887394b3a58",
@@ -302,7 +303,8 @@
             "layout": "vertical",
             "toggle": 0,
             "return_format": "value",
-            "save_custom": 0
+            "save_custom": 0,
+            "custom_choice_button_text": "Add new choice"
         },
         {
             "key": "field_63dbe635de4a5",
@@ -327,8 +329,8 @@
             "name": "your_photos",
             "aria-label": "",
             "type": "repeater",
-            "instructions": "",
-            "required": 0,
+            "instructions": "At least 6 photos are required",
+            "required": 1,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
@@ -337,7 +339,7 @@
             },
             "layout": "table",
             "pagination": 0,
-            "min": 0,
+            "min": 6,
             "max": 0,
             "collapsed": "",
             "button_label": "Add Row",
@@ -350,7 +352,7 @@
                     "aria-label": "",
                     "type": "image",
                     "instructions": "",
-                    "required": 0,
+                    "required": 1,
                     "conditional_logic": 0,
                     "wrapper": {
                         "width": "",
@@ -366,7 +368,7 @@
                     "max_height": "",
                     "max_size": "",
                     "mime_types": "",
-                    "preview_size": "medium",
+                    "preview_size": "thumbnail",
                     "parent_repeater": "field_63eefd1519400"
                 }
             ]
@@ -410,5 +412,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1704530351
+    "modified": 1707240048
 }

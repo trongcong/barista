@@ -310,6 +310,19 @@
     .acf-checkbox-list li {
         @extend %lt-checkbox;
     }
+
+    .action-profile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 1px solid #ccc;
+
+        @include toggle-btn();
+    }
 }
 
 .__cta.__contact-item {

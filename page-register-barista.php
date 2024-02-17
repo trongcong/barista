@@ -3,6 +3,10 @@
  * Template Name: Register Barista Page
  * Created by NTC.
  */
+if ( can_edit_barista_profile() ) {
+	header( "Location: " . get_barista_profile_link() );
+	exit();
+}
 acf_form_head();
 get_header(); ?>
 <?php do_action( 'ocean_before_content_wrap' ); ?>

@@ -192,6 +192,8 @@ function lt_ajax_create_new_barista() {
 	}
 	$date_of_post = get_the_date( "c", $post_id );
 	update_field( "re_active_profile", $date_of_post, $post_id );
+	update_field( "barista_had_a_job", false, $post_id );
+	update_field( "barista_hide_profile", false, $post_id );
 	update_field( "barista_profile_id", $post_id, "user_" . get_current_user_id() );
 
 	wp_send_json( [
@@ -292,6 +294,31 @@ function lt_ajax_contact_action() {
 
 	wp_send_json( [
 		'data' => $contacted,
+	] );
+
+	wp_die();
+}
+
+add_action( 'wp_ajax_lt_ajax_barista_action', 'lt_ajax_barista_action' );
+add_action( 'wp_ajax_nopriv_lt_ajax_barista_action', 'lt_ajax_barista_action' );
+function lt_ajax_barista_action() {
+	check_ajax_referer( "_security", 'security' );
+	$id          = isset( $_POST['id'] ) ? intval( $_POST['id'] ) : null;
+	$hadAJob     = isset( $_POST['had_a_job'] ) ? filter_var( $_POST['had_a_job'], FILTER_VALIDATE_BOOLEAN ) : false;
+	$hideProfile = isset( $_POST['hide_profile'] ) ? filter_var( $_POST['hide_profile'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+	if ( isset( $_POST['had_a_job'] ) ) {
+		update_post_meta( $id, "barista_had_a_job", $hadAJob );
+	}
+	if ( isset( $_POST['hide_profile'] ) ) {
+		update_post_meta( $id, "barista_hide_profile", $hideProfile );
+	}
+
+	wp_send_json( [
+		'data' => [
+			get_post_meta( $id, "barista_had_a_job", true ),
+			get_post_meta( $id, "barista_hide_profile", true )
+		],
 	] );
 
 	wp_die();
@@ -405,6 +432,31 @@ function add_action_um_delete_user( $user_id ) {
 		wp_delete_post( $user_post->ID, true );
 	}
 }
+
+add_filter( 'manage_barista_posts_columns', 'custom_columns_list_for_barista' );
+function custom_columns_list_for_barista( $columns ) {
+	$columns['actions'] = 'Actions';
+
+	return $columns;
+}
+
+add_action( 'manage_barista_posts_custom_column', 'barista_custom_column_values', 10, 2 );
+function barista_custom_column_values( $column, $post_id ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return;
+	}
+	$active_profile = active_profile( $post_id );
+	$hide_profile   = get_post_meta( $post_id, "barista_hide_profile", true );
+
+	switch ( $column ) {
+		case 'actions':
+			fs_actions_profile( $post_id );
+			break;
+		default:
+			break;
+	}
+}
+
 
 add_filter( 'manage_active_code_posts_columns', 'custom_columns_list_for_active_code' );
 function custom_columns_list_for_active_code( $columns ) {

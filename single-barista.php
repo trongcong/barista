@@ -32,10 +32,11 @@ lt_add_page_header( $title );
 				// Start loop.
 				while ( have_posts() ) :
 					the_post();
-					$phone_number = get_field( "your_phone_number" );
-					$email        = get_field( "your_email" );
-					$avatar       = get_field( "your_avatar" );
-					$video_url    = get_video_url( get_the_ID() );
+					$phone_number   = get_field( "your_phone_number" );
+					$email          = get_field( "your_email" );
+					$avatar         = get_field( "your_avatar" );
+					$video_url      = get_video_url( get_the_ID() );
+
 					if ( $is_edit_barista ) { ?>
 						<div class="__lt-single-update">
 							<h6><a href="<?= get_barista_profile_link( false ) ?>"><< Back to profile</a></h6>
@@ -45,6 +46,7 @@ lt_add_page_header( $title );
 								'uploader'     => 'basic',
 								'submit_value' => "Update profile",
 							) ); ?>
+							<?php fs_actions_profile(get_the_ID()) ?>
 						</div>
 					<?php } else { ?>
 						<div class="__lt-single-barista">
@@ -127,7 +129,7 @@ lt_add_page_header( $title );
 											</div>
 										</div>
 										<div class="__ct-info-item __ct-volume">
-											<h4>Barista Skills</h4>
+											<h4>Volume I can handle</h4>
 											<div>
 												<?= get_field( 'volume_you_are_able_to_handle_solo' ); ?>
 											</div>

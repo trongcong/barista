@@ -2,12 +2,32 @@
 /**
  * Created by NTC
  */
+define( 'FS_RELEASE_VERSION', '1.4' );
 add_action( 'wp_enqueue_scripts', 'lt_enqueue_scripts' );
 function lt_enqueue_scripts() {
-	wp_enqueue_style( 'lt-style', get_stylesheet_directory_uri() . '/inc/assets/css/lt-main.min.css', array(), WP_DEBUG ? rand() : "1.2" );
+	wp_enqueue_style( 'lt-style', get_stylesheet_directory_uri() . '/inc/assets/css/lt-main.min.css', array(), WP_DEBUG ? rand() : FS_RELEASE_VERSION );
 	wp_enqueue_script( 'lt-script', get_stylesheet_directory_uri() . '/inc/assets/js/lt-main.min.js', array(
 		'jquery',
-	), WP_DEBUG ? rand() : "1.3", true );
+	), WP_DEBUG ? rand() : FS_RELEASE_VERSION, true );
+
+	wp_localize_script( 'lt-script', 'ajax_data', [
+		'admin_logged'        => in_array( 'administrator', wp_get_current_user()->roles ) ? 'yes' : 'no',
+		'ajax_url'            => admin_url( 'admin-ajax.php' ),
+		'tpd_uri'             => get_template_directory_uri(),
+		'site_url'            => site_url(),
+		'rest_url'            => get_rest_url(),
+		'_ajax_nonce'         => wp_create_nonce( "_security" ),
+		'post_id'             => get_the_ID(),
+		'barista_profile_url' => get_barista_profile_link(),
+	] );
+}
+
+add_action( 'admin_enqueue_scripts', 'lt_admin_enqueue_scripts' );
+function lt_admin_enqueue_scripts() {
+	wp_enqueue_style( 'lt-style', get_stylesheet_directory_uri() . '/inc/assets/css/fs-main.admin.min.css', array(), WP_DEBUG ? rand() : FS_RELEASE_VERSION );
+	wp_enqueue_script( 'lt-script', get_stylesheet_directory_uri() . '/inc/assets/js/fs-main.admin.min.js', array(
+		'jquery',
+	), WP_DEBUG ? rand() : FS_RELEASE_VERSION, true );
 
 	wp_localize_script( 'lt-script', 'ajax_data', [
 		'admin_logged'        => in_array( 'administrator', wp_get_current_user()->roles ) ? 'yes' : 'no',
@@ -33,11 +53,43 @@ function fs_role_admin() {
 	return 'administrator';
 }
 
-function get_lt_item( $id ) {
+function fs_actions_profile( $post_id ) {
+	$active_profile = active_profile( $post_id );
+	$hide_profile   = get_post_meta( $post_id, "barista_hide_profile", true );
+	?>
+	<div class="action-profile" data-post-id="<?=$post_id?>">
+		<div>
+			<label class="toggle">
+				<input class="toggle-checkbox"
+				       type="checkbox" <?= $active_profile ? "checked" : "" ?> name="had_a_job">
+				<div class="toggle-switch"></div>
+				<span class="toggle-label">I already have a job</span>
+			</label>
+		</div>
+		<div>
+			<label class="toggle">
+				<input class="toggle-checkbox"
+				       type="checkbox"<?= $hide_profile ? "checked" : "" ?> name="hide_profile">
+				<div class="toggle-switch"></div>
+				<span class="toggle-label">Hide my profile in the list</span>
+			</label>
+		</div>
+	</div>
+	<?php
+}
+
+function active_profile( $id ) {
 	$re_active_profile = get_field( 're_active_profile', $id );
 	$re_active_profile = $re_active_profile ? $re_active_profile : get_the_date( 'c' );
 	$exp               = get_number_of_days_from_date_to_now( $re_active_profile );
-	$can_do            = intval( $exp ) > 7 ? "__can-do" : "";
+	$hadAJob           = get_post_meta( $id, "barista_had_a_job", true );
+
+	return ! ! $hadAJob;
+}
+
+function get_lt_item( $id ) {
+	$active_profile = active_profile( $id );
+	$can_do         = $active_profile ? "__can-do" : "";
 	?>
 	<div class="__lt-item <?= $can_do; ?>">
 		<div class="__lt-item-inner">
@@ -85,7 +137,7 @@ function get_lt_item( $id ) {
 			<div class="__detail">
 				<a href="<?= get_the_permalink( $id ) ?>">
 					<?php
-					if ( intval( $exp ) > 7 ) {
+					if ( $active_profile ) {
 						echo "This barista might have already got a job 🤝";
 					} else {
 						echo "I am still looking for more work. Contact me";
@@ -211,9 +263,14 @@ function render_tag_from_acf_fields( $field ) {
 	} elseif ( $field['type'] == "repeater" && ( $field['name'] == 'your_photos' || $field['name'] == 'upload_your_image' ) ) { ?>
 		<div class="__lt-input <?= $class_required ?>">
 			<label>
-				<span><?= $field['label'] ?><?= $label_required ?></span>
+				<span>
+					<?= $field['label'] ?><?= $label_required ?>
+					<?= $field['instructions'] ? "<em style='color: #666; font-size: 12px; font-weight: normal;' class='instructions'>(" . $field['instructions'] . ")</em>" : '' ?>
+				</span>
+
 				<input multiple accept="image/*" name="<?= $field['name'] ?>[]" type="file"
-				       placeholder="" <?= $field['required'] ? 'required' : '' ?>/>
+				       placeholder="" <?= $field['required'] ? 'required' : '' ?>
+					<?= $field['min'] ? 'min="' . $field['min'] . '"' : '' ?>/>
 			</label>
 		</div>
 		<?php

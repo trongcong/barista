@@ -255,6 +255,7 @@ jQuery(function ($) {
         })
         $btnRegister.on("click", (e) => {
             //e.preventDefault();
+            const $files = $wrap.find('input[type="file"]')
             for (let i = 0; i < $required.length; i++) {
                 const e = $required[i]
                 let valid = false;
@@ -266,6 +267,13 @@ jQuery(function ($) {
                     valid = $(e).find('input[type="checkbox"]:checked').length > 0;
                 }
                 if (!helpers.isValidRequired(e, valid)) return
+            }
+            for (let i = 0; i < $files.length; i++) {
+                const e = $files[i]
+                const minFile = $(e).attr('min')
+                let valid = false;
+                valid = !minFile || minFile && e.files.length >= +minFile;
+                if (!helpers.isValidMinMax(e, valid, {min: minFile})) return
             }
 
             __ajax();
@@ -392,6 +400,79 @@ jQuery(function ($) {
             })
         }
     }
+    const BaristaAction = () => {
+        const makeAjaxRequest = async (data) => {
+            try {
+                await $.ajax({
+                    type: "post",
+                    url: ajax_data.ajax_url,
+                    dataType: 'json',
+                    data: data,
+                });
+                window.location.reload();
+            } catch (e) {
+                console.error(e)
+            }
+        };
+        const handleInputChange = async (name, value) => {
+            const data = {
+                action: 'lt_ajax_barista_action',
+                security: ajax_data._ajax_nonce,
+                id: ajax_data.post_id,
+                [name]: value,
+            };
+            await makeAjaxRequest(data);
+        };
+        $('input[name="had_a_job"]').on('change', async function (e) {
+            const checked = $(this).is(':checked');
+            await handleInputChange('had_a_job', checked);
+        });
+
+        $('input[name="hide_profile"]').on('change', async function (e) {
+            const checked = $(this).is(':checked');
+            await handleInputChange('hide_profile', checked);
+        });
+        // const hadAJob = $('input[name="had_a_job"]');
+        // const hideProfile = $('input[name="hide_profile"]');
+        // hadAJob.on('change', async function (e) {
+        //     const checked = $(this).is(':checked')
+        //     try {
+        //         await $.ajax({
+        //             type: "post",
+        //             url: ajax_data.ajax_url,
+        //             dataType: 'json',
+        //             data: {
+        //                 action: 'lt_ajax_barista_action',
+        //                 security: ajax_data._ajax_nonce,
+        //                 id: ajax_data.post_id,
+        //                 had_a_job: checked,
+        //             },
+        //         });
+        //         window.location.reload();
+        //     } catch (e) {
+        //         console.error(e)
+        //     }
+        // })
+        // hideProfile.on('change', async function (e) {
+        //     const checked = $(this).is(':checked')
+        //     try {
+        //         await $.ajax({
+        //             type: "post",
+        //             url: ajax_data.ajax_url,
+        //             dataType: 'json',
+        //             data: {
+        //                 action: 'lt_ajax_barista_action',
+        //                 security: ajax_data._ajax_nonce,
+        //                 id: ajax_data.post_id,
+        //                 hide_profile: checked,
+        //             },
+        //         });
+        //         window.location.reload();
+        //     } catch (e) {
+        //         console.error(e)
+        //     }
+        // })
+    }
     $(document).ready(function () {
         document.querySelectorAll('.__lt-range-slider')
             .forEach(range => range.querySelectorAll('input')
@@ -408,6 +489,7 @@ jQuery(function ($) {
         HandleModal();
         GotoBaristaProfile();
         FilterJobs();
+        BaristaAction()
     });
     $(window).on('load', () => {
     });

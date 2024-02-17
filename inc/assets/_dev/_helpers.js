@@ -25,5 +25,17 @@ export const helpers = {
             return false
         }
         return true
+    },
+    isValidMinMax(e, valid, {min, max}) {
+        const el = jQuery(e).parents('.__lt-input')
+        jQuery(el).find('.__err').remove()
+        const $span = jQuery(el).find('>span:nth-child(1)').length ? jQuery(el).find('>span:nth-child(1)') : jQuery(el).find('>label>span:nth-child(1)');
+        if (!valid) {
+            helpers.scrollToElement(jQuery(el));
+            if (min) $span.after(`<p class='__err'>Please upload at least ${min} files</p>`)
+            if (max) $span.after(`<p class='__err'>Please upload at most ${max} files</p>`)
+            return false
+        }
+        return true
     }
 }

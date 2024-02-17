@@ -1,22 +1,36 @@
 {
 	"name": "inc",
 	"version": "1.0.0",
-	"browser": "./assets/js/lt-main.min.js",
-	"css": "./assets/css/lt-main.min.css",
+	"fe-js": "./assets/js/lt-main.min.js",
+	"fe-css": "./assets/css/lt-main.min.css",
+	"admin-css": "./assets/css/fs-main.admin.min.css",
+	"admin-js": "./assets/js/fs-main.admin.min.js",
 	"targets": {
-		"css": {
+		"fe-css": {
 			"source": "./assets/_dev/lt-main.scss",
 			"optimize": true
 		},
-		"browser": {
+		"fe-js": {
 			"source": "./assets/_dev/lt-main.js",
 			"optimize": true,
 			"includeNodeModules": [
 				"@swc/helpers",
 				"tslib"
 			]
-		}
-	},
+		},
+    "admin-css": {
+      "source": "./assets/_dev/admin/fs-admin.scss",
+      "optimize": true
+    },
+    "admin-js": {
+      "source": "./assets/_dev/admin/fs-admin.js",
+      "optimize": true,
+      "includeNodeModules": [
+        "@swc/helpers",
+        "tslib"
+      ]
+    }
+  },
 	"license": "MIT",
 	"browserslist": "> 0.5%, last 4 versions, not dead",
 	"scripts": {
