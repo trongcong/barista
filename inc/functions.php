@@ -339,26 +339,26 @@ function lt_filter_group() {
 	$hospitality_skills      = acf_get_field( "field_625cf65daf1de" )["choices"];
 	$training_certifications = acf_get_field( "field_6583018dc732d" )['choices'];
 	?>
-	<div class="__lt-filter-group">
-		<h4 class="__lt-filter-title">First Shot Barista Training Certification</h4>
-		<div class="__lt-filter-checkbox-group">
-			<?php foreach ( $training_certifications as $cert ) { ?>
-				<div class="__lt-checkbox">
-					<label>
-						<input name="training_certification[]" type="checkbox" value="<?= trim( $cert ) ?>"/>
-						<span><?= trim( $cert ) ?></span>
-					</label>
-				</div>
-			<?php } ?>
-		</div>
-	</div>
+<!--	<div class="__lt-filter-group">-->
+<!--		<h4 class="__lt-filter-title">First Shot Barista Training Certification</h4>-->
+<!--		<div class="__lt-filter-checkbox-group">-->
+<!--			--><?php //foreach ( $training_certifications as $cert ) { ?>
+<!--				<div class="__lt-checkbox">-->
+<!--					<label>-->
+<!--						<input name="training_certification[]" type="checkbox" value="--><?php //= trim( $cert ) ?><!--"/>-->
+<!--						<span>--><?php //= trim( $cert ) ?><!--</span>-->
+<!--					</label>-->
+<!--				</div>-->
+<!--			--><?php //} ?>
+<!--		</div>-->
+<!--	</div>-->
 
 	<div class="__lt-filter-group">
 		<h4 class="__lt-filter-title">Barista Experience (Years)</h4>
 		<div class="__lt-range-slider">
-			<input name="year_exp_min" type="range" min="0.5" max="10" step="0.5" value="0.5"
+			<input name="year_exp_min" type="range" min="0.5" max="5" step="0.5" value="0.5"
 			       class="__lt-range-slider__input"/>
-			<input name="year_exp_max" type="range" min="0.5" max="10" step="0.5" value="10"
+			<input name="year_exp_max" type="range" min="0.5" max="5" step="0.5" value="5"
 			       class="__lt-range-slider__input"/>
 			<div class="__lt-range-slider__display">
 				<!-- This node is optional and only used to display the current values -->
@@ -369,13 +369,27 @@ function lt_filter_group() {
 	<div class="__lt-filter-group">
 		<h4 class="__lt-filter-title">Retail or Hospitality Experience</h4>
 		<div class="__lt-range-slider">
-			<input name="year_exp_aus_min" type="range" min="0.5" max="10" step="0.5" value="0.5"
+			<input name="year_exp_aus_min" type="range" min="0.5" max="5" step="0.5" value="0.5"
 			       class="__lt-range-slider__input"/>
-			<input name="year_exp_aus_max" type="range" min="0.5" max="10" step="0.5" value="10"
+			<input name="year_exp_aus_max" type="range" min="0.5" max="5" step="0.5" value="5"
 			       class="__lt-range-slider__input"/>
 			<div class="__lt-range-slider__display">
 				<!-- This node is optional and only used to display the current values -->
 			</div>
+		</div>
+	</div>
+
+	<div class="__lt-filter-group">
+		<h4 class="__lt-filter-title">Volume (solo)</h4>
+		<div class="__lt-filter-checkbox-group">
+			<?php foreach ( $volumes as $v ) { ?>
+				<div class="__lt-checkbox">
+					<label>
+						<input name="volumes[]" type="checkbox" value="<?= $v ?>"/>
+						<span><?= $v ?></span>
+					</label>
+				</div>
+			<?php } ?>
 		</div>
 	</div>
 
@@ -387,20 +401,6 @@ function lt_filter_group() {
 					<label>
 						<input name="barista_skills[]" type="checkbox" value="<?= trim( $skill ) ?>"/>
 						<span><?= trim( $skill ) ?></span>
-					</label>
-				</div>
-			<?php } ?>
-		</div>
-	</div>
-
-	<div class="__lt-filter-group">
-		<h4 class="__lt-filter-title">Volume</h4>
-		<div class="__lt-filter-checkbox-group">
-			<?php foreach ( $volumes as $v ) { ?>
-				<div class="__lt-checkbox">
-					<label>
-						<input name="volumes[]" type="checkbox" value="<?= $v ?>"/>
-						<span><?= $v ?></span>
 					</label>
 				</div>
 			<?php } ?>

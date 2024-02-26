@@ -339,9 +339,10 @@ function fs_update_barista( $post_id ) {
 
 add_action( 'wp_footer', 'lt_cta_contact' );
 function lt_cta_contact() {
-	if ( is_single() && get_post_type() === "barista" ) { ?>
+	if ( is_single() && get_post_type() === "barista" ) {
+		$phone_number = get_field( "your_phone_number" ); ?>
 		<div class="__cta __contact-item">
-			<a href="tel:0123456">
+			<a href="tel:<?= $phone_number ?>">
 				<span>Contact me</span>
 				<span class="__svg">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">

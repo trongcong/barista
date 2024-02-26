@@ -368,11 +368,12 @@ jQuery(function ($) {
         let slide1 = parseFloat(slides[0].value);
         let slide2 = parseFloat(slides[1].value);
 
-        const percentageMin = (slide1 / (max - min)) * 100 - 5;
-        const percentageMax = (slide2 / (max - min)) * 100;
+        const percentageMin = (slide1 / (max - min)) * 100 - ((min / max)) * 100 - min;
+        const percentageMax = (slide2 / (max - min)) * 100 - ((min / max)) * 100 - min;
+        console.log(percentageMin, percentageMax, max, min)
 
         parent.style.setProperty('--range-slider-value-low', percentageMin);
-        parent.style.setProperty('--range-slider-value-high', percentageMax > slide2 * 10 ? slide2 * 10 : percentageMax);
+        parent.style.setProperty('--range-slider-value-high', percentageMax > slide2 * (100 / max) ? slide2 * (100 / max) : percentageMax);
 
         if (slide1 > slide2) {
             const tmp = slide2;
