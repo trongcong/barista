@@ -57,7 +57,7 @@ function fs_actions_profile( $post_id ) {
 	$active_profile = active_profile( $post_id );
 	$hide_profile   = get_post_meta( $post_id, "barista_hide_profile", true );
 	?>
-	<div class="action-profile" data-post-id="<?=$post_id?>">
+	<div class="action-profile" data-post-id="<?= $post_id ?>">
 		<div>
 			<label class="toggle">
 				<input class="toggle-checkbox"
@@ -144,6 +144,60 @@ function get_lt_item( $id ) {
 					}
 					?>
 				</a>
+			</div>
+		</div>
+	</div>
+	<?php
+}
+
+function get_lt_item2( $id ) {
+	$photos = get_field( "your_photos", $id );
+	$volume = get_field( 'volume_you_are_able_to_handle_solo' ) ?? '';
+	$volume = str_replace('More than','>', $volume );
+	$volume = str_replace('Less than','<', $volume );
+	?>
+	<div class="__lt-item --v2">
+		<div class="__lt-item-inner">
+			<div class="__inner-wrap">
+				<div class="__top">
+					<div class="__avatar">
+						<a href="<?= get_the_permalink( $id ) ?>">
+							<img src="<?= get_barista_avatar( $id ) ?>" alt="avatar">
+						</a>
+					</div>
+					<div class="__name-wrap">
+						<div class="__updated">Last update: <?= get_the_date( 'd M Y', $id ) ?></div>
+						<div class="__name"><a href="<?= get_the_permalink( $id ) ?>"><?= get_the_title( $id ) ?></a></div>
+						<div class="__meta">
+							<div class="__num-exp">
+								Barista:
+								<strong><?= get_field( "years_of_experience", $id )['value'] ?> yrs</strong>
+							</div>
+							<div class="__num-exp-aus">
+								Retail or Hospo:
+								<strong><?= get_field( "experience_in_australia", $id )['value'] ?> yrs</strong>
+							</div>
+							<div class="__num-volume">
+								Volume (solo):
+								<strong><?= $volume; ?></strong>
+							</div>
+	<!--						<div class="__location">-->
+	<!--							Location: 10km around-->
+	<!--							<strong>--><?php //= get_field( "location", $id )['value'] ?><!--</strong> Yrs-->
+	<!--						</div>-->
+						</div>
+					</div>
+				</div>
+				<div class="__images">
+					<?php
+					if ( ! empty( $photos ) ) {
+						$limited_photos = array_slice( $photos, 0, 3 );
+						foreach ( $limited_photos as $photo ) { ?>
+							<div class="item"><img src="<?= $photo['photo_item'] ?>" alt="photo"></div>
+						<?php }
+					} ?>
+				</div>
+				<div class="__contact"><a href="<?= get_the_permalink( $id ) ?>">Contact Now</a></div>
 			</div>
 		</div>
 	</div>
@@ -339,19 +393,19 @@ function lt_filter_group() {
 	$hospitality_skills      = acf_get_field( "field_625cf65daf1de" )["choices"];
 	$training_certifications = acf_get_field( "field_6583018dc732d" )['choices'];
 	?>
-<!--	<div class="__lt-filter-group">-->
-<!--		<h4 class="__lt-filter-title">First Shot Barista Training Certification</h4>-->
-<!--		<div class="__lt-filter-checkbox-group">-->
-<!--			--><?php //foreach ( $training_certifications as $cert ) { ?>
-<!--				<div class="__lt-checkbox">-->
-<!--					<label>-->
-<!--						<input name="training_certification[]" type="checkbox" value="--><?php //= trim( $cert ) ?><!--"/>-->
-<!--						<span>--><?php //= trim( $cert ) ?><!--</span>-->
-<!--					</label>-->
-<!--				</div>-->
-<!--			--><?php //} ?>
-<!--		</div>-->
-<!--	</div>-->
+	<!--	<div class="__lt-filter-group">-->
+	<!--		<h4 class="__lt-filter-title">First Shot Barista Training Certification</h4>-->
+	<!--		<div class="__lt-filter-checkbox-group">-->
+	<!--			--><?php //foreach ( $training_certifications as $cert ) { ?>
+	<!--				<div class="__lt-checkbox">-->
+	<!--					<label>-->
+	<!--						<input name="training_certification[]" type="checkbox" value="--><?php //= trim( $cert ) ?><!--"/>-->
+	<!--						<span>--><?php //= trim( $cert ) ?><!--</span>-->
+	<!--					</label>-->
+	<!--				</div>-->
+	<!--			--><?php //} ?>
+	<!--		</div>-->
+	<!--	</div>-->
 
 	<div class="__lt-filter-group">
 		<h4 class="__lt-filter-title">Barista Experience (Years)</h4>
@@ -446,4 +500,41 @@ function lt_filter_modal() { ?>
 		</div>
 	</div>
 	<?php
+}
+
+function lt_read_post_codes() {
+	session_start();
+	if ( isset( $_SESSION['filtered_items'] ) ) {
+		return $_SESSION['filtered_items'];
+	}
+	$file_path = get_stylesheet_directory() . '/inc/postcodes/australian_postcodes.json';
+	$json_data = file_get_contents( $file_path );
+	if ( $json_data === false ) {
+		return false;
+	}
+
+	$decoded_data = json_decode( $json_data, true );
+	if ( $decoded_data === null ) {
+		return false;
+	}
+
+	$nws                        = array_filter( $decoded_data, function ( $item ) {
+		return $item['state'] === 'NSW';
+	} );
+	$filtered_items             = array_map( function ( $item ) {
+		return [
+			"id"       => $item["id"],
+			"postcode" => $item["postcode"],
+			"locality" => $item["locality"],
+			"state"    => $item["state"],
+			"long"     => $item["long"],
+			"lat"      => $item["lat"],
+			"sa3name"  => $item["sa3name"],
+			"sa4name"  => $item["sa4name"],
+			"dc"       => $item["dc"],
+		];
+	}, $nws );
+	$_SESSION['filtered_items'] = $filtered_items;
+
+	return $filtered_items;
 }

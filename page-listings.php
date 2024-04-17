@@ -55,7 +55,7 @@ get_header(); ?>
                                         if ( $query->have_posts() ) {
 	                                        while ( $query->have_posts() ) {
 		                                        $query->the_post();
-		                                        get_lt_item( get_the_ID() );
+		                                        get_lt_item2( get_the_ID() );
 	                                        }
 	                                        // Restore original Post Data
 	                                        wp_reset_postdata();

@@ -589,3 +589,15 @@ function filter_acf_validate_update_advanced_code( $valid, $value, $field, $inpu
 
 	return $valid;
 }
+
+//add_filter( 'acf/load_field/name=location', 'lt_acf_load_field_location', 10, 3 );
+function lt_acf_load_field_location( $field ) {
+	$nsw     = lt_read_post_codes();
+	$choices = [];
+	foreach ( $nsw as $item ) {
+		$choices[ $item['id'] ] = $item['postcode'] . ' - ' . $item['locality'] . ' / ' . ( $item['dc'] !== 'NULL' ? $item['dc'] : $item['sa4name'] );
+	}
+	$field['choices'] = $choices;
+
+	return $field;
+}
