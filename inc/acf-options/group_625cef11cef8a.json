@@ -52,16 +52,13 @@
             "aria-label": "",
             "type": "text",
             "instructions": "",
-            "required": 0,
+            "required": 1,
             "conditional_logic": 0,
             "wrapper": {
                 "width": "",
                 "class": "",
                 "id": ""
             },
-            "frontend_admin_display_mode": "edit",
-            "only_front": 0,
-            "readonly": 0,
             "default_value": "",
             "placeholder": "",
             "prepend": "",
@@ -412,5 +409,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1707240048
+    "modified": 1713328657
 }

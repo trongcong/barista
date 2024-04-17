@@ -152,9 +152,11 @@ function get_lt_item( $id ) {
 
 function get_lt_item2( $id ) {
 	$photos = get_field( "your_photos", $id );
-	$volume = get_field( 'volume_you_are_able_to_handle_solo' ) ?? '';
-	$volume = str_replace('More than','>', $volume );
-	$volume = str_replace('Less than','<', $volume );
+	$volume = get_field( 'volume_you_are_able_to_handle_solo', $id ) ?? '';
+	$volume = str_replace( 'More than', '>', $volume );
+	$volume = str_replace( 'Less than', '<', $volume );
+	$name   = get_field( 'preferred_name', $id );
+	$name   = ! $name ? get_the_title( $id ) : $name;
 	?>
 	<div class="__lt-item --v2">
 		<div class="__lt-item-inner">
@@ -167,7 +169,7 @@ function get_lt_item2( $id ) {
 					</div>
 					<div class="__name-wrap">
 						<div class="__updated">Last update: <?= get_the_date( 'd M Y', $id ) ?></div>
-						<div class="__name"><a href="<?= get_the_permalink( $id ) ?>"><?= get_the_title( $id ) ?></a></div>
+						<div class="__name"><a href="<?= get_the_permalink( $id ) ?>"><?= $name ?></a></div>
 						<div class="__meta">
 							<div class="__num-exp">
 								Barista:
@@ -181,10 +183,11 @@ function get_lt_item2( $id ) {
 								Volume (solo):
 								<strong><?= $volume; ?></strong>
 							</div>
-	<!--						<div class="__location">-->
-	<!--							Location: 10km around-->
-	<!--							<strong>--><?php //= get_field( "location", $id )['value'] ?><!--</strong> Yrs-->
-	<!--						</div>-->
+							<!--						<div class="__location">-->
+							<!--							Location: 10km around-->
+							<!--							<strong>-->
+							<?php //= get_field( "location", $id )['value'] ?><!--</strong> Yrs-->
+							<!--						</div>-->
 						</div>
 					</div>
 				</div>
@@ -192,9 +195,11 @@ function get_lt_item2( $id ) {
 					<?php
 					if ( ! empty( $photos ) ) {
 						$limited_photos = array_slice( $photos, 0, 3 );
-						foreach ( $limited_photos as $photo ) { ?>
-							<div class="item"><img src="<?= $photo['photo_item'] ?>" alt="photo"></div>
-						<?php }
+						foreach ( $limited_photos as $photo ) {
+							if ( $photo['photo_item'] ) { ?>
+								<div class="item"><img src="<?= $photo['photo_item'] ?>" alt="photo"></div>
+							<?php }
+						}
 					} ?>
 				</div>
 				<div class="__contact"><a href="<?= get_the_permalink( $id ) ?>">Contact Now</a></div>

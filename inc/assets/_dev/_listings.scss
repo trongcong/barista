@@ -264,6 +264,9 @@
                             top: 5px;
                             right: 5px;
                         }
+                        @media (max-width: 467px) {
+                           font-size: 10px;
+                        }
                     }
 
                     .__name a {
