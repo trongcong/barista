@@ -187,7 +187,8 @@ lt_add_page_header( $title );
 												if ( have_rows( 'your_photos' ) ):
 													while ( have_rows( 'your_photos' ) ) : the_row();
 														$photo = get_sub_field( 'photo_item' );
-														echo '<div class="photo-item"><a target="_blank" href="' . $photo . '"><img src="' . $photo . '" alt="photo"></a></div>';
+														$img = wp_get_attachment_image($photo['ID']);
+														echo '<div class="photo-item"><a target="_blank" href="' . $photo['url'] . '">'.$img.'</a></div>';
 													endwhile;
 												else :
 													echo '<p>Does not have any photos.</p>';

@@ -196,8 +196,9 @@ function get_lt_item2( $id ) {
 					if ( ! empty( $photos ) ) {
 						$limited_photos = array_slice( $photos, 0, 3 );
 						foreach ( $limited_photos as $photo ) {
+							$img = wp_get_attachment_image($photo['photo_item']['ID']);
 							if ( $photo['photo_item'] ) { ?>
-								<div class="item"><img src="<?= $photo['photo_item'] ?>" alt="photo"></div>
+								<div class="item"><?= $img ?></div>
 							<?php }
 						}
 					} ?>
