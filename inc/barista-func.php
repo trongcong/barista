@@ -8,10 +8,10 @@ function get_user_id_by_post_id( $post_id ) {
 	return get_post_field( 'post_author', $post_id );
 }
 
-function get_barista_avatar( $post_id ) {
+function get_barista_avatar( $post_id, $size = 'thumbnail' ) {
 	$avatar_id = get_field( 'your_avatar', $post_id );
 
-	return $avatar_id ? wp_get_attachment_image_url( $avatar_id['ID'] ) : um_get_default_avatar_uri();
+	return $avatar_id ? wp_get_attachment_image_url( $avatar_id['ID'], $size ) : um_get_default_avatar_uri();
 }
 
 function get_barista_profile_link( $edit = true ) {
@@ -58,17 +58,18 @@ function get_barista_contacted( $postID, $metaKey = "barista_contacted" ) {
 }
 
 /**
- * @param int $year_exp_min
- * @param int $year_exp_max
- * @param int $year_exp_aus_min
- * @param int $year_exp_aus_max
- * @param array $barista_skills
- * @param array $volumes
- * @param array $hospitality_skills
+ * @param $layout
+ * @param $year_exp_min
+ * @param $year_exp_max
+ * @param $year_exp_aus_min
+ * @param $year_exp_aus_max
+ * @param $barista_skills
+ * @param $volumes
+ * @param $hospitality_skills
  *
  * @return WP_Query
  */
-function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_aus_min = 0, $year_exp_aus_max = 10, $barista_skills = [], $volumes = [], $hospitality_skills = [] ) {
+function create_query_barista( $layout = 'grid', $year_exp_min = 0, $year_exp_max = 10, $year_exp_aus_min = 0, $year_exp_aus_max = 10, $barista_skills = [], $volumes = [], $hospitality_skills = [] ) {
 	$meta_query = array(
 		"relation" => "AND",
 		array(
@@ -122,7 +123,7 @@ function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_
 		$meta_query[] = $barista_skills_query;
 	}
 	if ( ! empty( $volumes ) ) {
-		$volumes_query = array( 'relation' => 'OR' );;
+		$volumes_query = array( 'relation' => 'OR' );
 		foreach ( $volumes as $item ) {
 			$volumes_query[] = array(
 				'key'     => 'volume_you_are_able_to_handle_solo',
@@ -142,6 +143,21 @@ function create_query_barista( $year_exp_min = 0, $year_exp_max = 10, $year_exp_
 			);
 		}
 		$meta_query[] = $hospitality_skills_query;
+	}
+
+	if ( $layout == 'map' ) {
+		$meta_query[] = array(
+			'relation' => 'AND',
+			array(
+				'key'     => 'locations',
+				'compare' => 'EXISTS',
+			),
+			array(
+				'key'     => 'locations',
+				'value'   => null,
+				'compare' => '!=',
+			),
+		);
 	}
 
 	$attrs = array(
@@ -209,4 +225,50 @@ function set_barista_view_count() {
 			update_post_meta( $post->ID, $count_key, $visitor_count );
 		}
 	}
+}
+
+function get_map_data_for_barista() {
+	$layout          = $_GET['layout'] ?? 'grid';
+	$is_map          = $layout === 'map';
+	$is_listing_page = get_page_template_slug() === 'page-listings.php';
+	if ( ! $is_map && ! $is_listing_page ) {
+		return [];
+	}
+
+	$query    = create_query_barista( $layout );
+	$map_data = [];
+	if ( $query->have_posts() ) {
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			$map_data[] = get_barista_map_item( get_the_ID() );
+		}
+
+		wp_reset_postdata();
+
+		return $map_data;
+	} else {
+		return [];
+	}
+}
+
+function get_barista_map_item( $id ) {
+	$locations               = get_field( 'locations' );
+	$volume                  = get_field( 'volume_you_are_able_to_handle_solo', $id ) ?? '';
+	$volume                  = str_replace( 'More than', '>', $volume );
+	$volume                  = str_replace( 'Less than', '<', $volume );
+	$name                    = get_field( 'preferred_name', $id );
+	$name                    = ! $name ? get_the_title( $id ) : $name;
+	$experience_in_australia = get_field( "experience_in_australia", $id )['value'];
+	$years_of_experience     = get_field( "years_of_experience", $id )['value'];
+
+	return [
+		"id"                      => $id,
+		"title"                   => $name,
+		"url"                     => get_the_permalink(),
+		'avatar'                  => get_barista_avatar( $id ),
+		"experience_in_australia" => $experience_in_australia . ' yrs',
+		"years_of_experience"     => $years_of_experience . ' yrs',
+		"volume"                  => $volume,
+		"locations"               => $locations
+	];
 }

@@ -7,6 +7,7 @@
 
 require get_stylesheet_directory() . '/inc/custom-post-types.php';
 require get_stylesheet_directory() . '/inc/custom-taxonomies.php';
+require get_stylesheet_directory() . '/inc/enqueue-scripts.php';
 require get_stylesheet_directory() . '/inc/functions.php';
 require get_stylesheet_directory() . '/inc/business-func.php';
 require get_stylesheet_directory() . '/inc/barista-func.php';

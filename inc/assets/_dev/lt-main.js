@@ -46,6 +46,11 @@ jQuery(function ($) {
         return counter;
     };
 
+    const filterDataMapBarista = async (data) => {
+        const baristaFiltering = new CustomEvent('baristaFiltering', {detail: {data}});
+        document.dispatchEvent(baristaFiltering);
+    }
+
     const __ajaxFilterBarista = async ({...object}, $wrap, classAddLoading) => {
         const {
             training_certification,
@@ -62,6 +67,7 @@ jQuery(function ($) {
         helpers.__addAjaxLoading($wrap, classAddLoading)
         helpers.scrollToElement($wrap)
         try {
+            const layout = new URLSearchParams(location.search)?.get('layout') || 'grid'
             const {items, count} = await $.ajax({
                 type: "post",
                 url: ajax_data.ajax_url,
@@ -69,6 +75,7 @@ jQuery(function ($) {
                 data: {
                     action: 'lt_ajax_filter_barista',
                     security: ajax_data._ajax_nonce,
+                    layout,
                     training_certification, barista_skills, volumes,
                     hospitality_skills,
                     year_exp_min: year_exp_min > year_exp_max ? year_exp_max : year_exp_min,
@@ -78,6 +85,8 @@ jQuery(function ($) {
                 },
             });
 
+            if (layout === 'map') $wrap.data('barista-filtered', items)
+            await filterDataMapBarista(items)
             $wrap.find(".__lt-items-wrap").html(items)
             $(".__counter-result").text(`(${count} barista${count > 1 ? "s" : ""})`)
             helpers.__removeAjaxLoading($wrap, classAddLoading)
@@ -370,7 +379,6 @@ jQuery(function ($) {
 
         const percentageMin = (slide1 / (max - min)) * 100 - ((min / max)) * 100 - min;
         const percentageMax = (slide2 / (max - min)) * 100 - ((min / max)) * 100 - min;
-        console.log(percentageMin, percentageMax, max, min)
 
         parent.style.setProperty('--range-slider-value-low', percentageMin);
         parent.style.setProperty('--range-slider-value-high', percentageMax > slide2 * (100 / max) ? slide2 * (100 / max) : percentageMax);
@@ -474,6 +482,16 @@ jQuery(function ($) {
         //     }
         // })
     }
+
+    const SaveListBaristaViewed = () => {
+        const BARISTA_VIEWED_KEY = 'barista-viewed'
+        const post_id = +ajax_data.post_id
+        const baristaViewed = JSON.parse(localStorage.getItem(BARISTA_VIEWED_KEY)) || [];
+        if (!baristaViewed?.includes(post_id)) {
+            baristaViewed.push(post_id)
+        }
+        localStorage.setItem(BARISTA_VIEWED_KEY, JSON.stringify(baristaViewed));
+    }
     $(document).ready(function () {
         document.querySelectorAll('.__lt-range-slider')
             .forEach(range => range.querySelectorAll('input')
@@ -491,6 +509,7 @@ jQuery(function ($) {
         GotoBaristaProfile();
         FilterJobs();
         BaristaAction()
+        SaveListBaristaViewed()
     });
     $(window).on('load', () => {
     });

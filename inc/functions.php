@@ -2,45 +2,6 @@
 /**
  * Created by NTC
  */
-define( 'FS_RELEASE_VERSION', '1.4' );
-add_action( 'wp_enqueue_scripts', 'lt_enqueue_scripts' );
-function lt_enqueue_scripts() {
-	wp_enqueue_style( 'lt-style', get_stylesheet_directory_uri() . '/inc/assets/css/lt-main.min.css', array(), WP_DEBUG ? rand() : FS_RELEASE_VERSION );
-	wp_enqueue_script( 'lt-script', get_stylesheet_directory_uri() . '/inc/assets/js/lt-main.min.js', array(
-		'jquery',
-	), WP_DEBUG ? rand() : FS_RELEASE_VERSION, true );
-
-	wp_localize_script( 'lt-script', 'ajax_data', [
-		'admin_logged'        => in_array( 'administrator', wp_get_current_user()->roles ) ? 'yes' : 'no',
-		'ajax_url'            => admin_url( 'admin-ajax.php' ),
-		'tpd_uri'             => get_template_directory_uri(),
-		'site_url'            => site_url(),
-		'rest_url'            => get_rest_url(),
-		'_ajax_nonce'         => wp_create_nonce( "_security" ),
-		'post_id'             => get_the_ID(),
-		'barista_profile_url' => get_barista_profile_link(),
-	] );
-}
-
-add_action( 'admin_enqueue_scripts', 'lt_admin_enqueue_scripts' );
-function lt_admin_enqueue_scripts() {
-	wp_enqueue_style( 'lt-style', get_stylesheet_directory_uri() . '/inc/assets/css/fs-main.admin.min.css', array(), WP_DEBUG ? rand() : FS_RELEASE_VERSION );
-	wp_enqueue_script( 'lt-script', get_stylesheet_directory_uri() . '/inc/assets/js/fs-main.admin.min.js', array(
-		'jquery',
-	), WP_DEBUG ? rand() : FS_RELEASE_VERSION, true );
-
-	wp_localize_script( 'lt-script', 'ajax_data', [
-		'admin_logged'        => in_array( 'administrator', wp_get_current_user()->roles ) ? 'yes' : 'no',
-		'ajax_url'            => admin_url( 'admin-ajax.php' ),
-		'tpd_uri'             => get_template_directory_uri(),
-		'site_url'            => site_url(),
-		'rest_url'            => get_rest_url(),
-		'_ajax_nonce'         => wp_create_nonce( "_security" ),
-		'post_id'             => get_the_ID(),
-		'barista_profile_url' => get_barista_profile_link(),
-	] );
-}
-
 function fs_role_barista() {
 	return 'um_barista';
 }
@@ -398,6 +359,8 @@ function lt_filter_group() {
 	$volumes                 = acf_get_field( "field_62887394b3a58" )["choices"];
 	$hospitality_skills      = acf_get_field( "field_625cf65daf1de" )["choices"];
 	$training_certifications = acf_get_field( "field_6583018dc732d" )['choices'];
+	$layout = $_GET['layout'] ?? 'grid';
+	$is_map = $layout === 'map';
 	?>
 	<!--	<div class="__lt-filter-group">-->
 	<!--		<h4 class="__lt-filter-title">First Shot Barista Training Certification</h4>-->
@@ -412,7 +375,24 @@ function lt_filter_group() {
 	<!--			--><?php //} ?>
 	<!--		</div>-->
 	<!--	</div>-->
-
+	<?php if ( $is_map ) { ?>
+		<div class="__lt-filter-group">
+			<h4 class="__lt-filter-title">Locations</h4>
+			<div class="__lt-input-location">
+				<input type="text" name="your_location" placeholder="Your location..">
+				<span class="icon-location">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor"
+				                                                                    d="M256 0c17.7 0 32 14.3 32 32V66.7C368.4 80.1 431.9 143.6 445.3 224H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H445.3C431.9 368.4 368.4 431.9 288 445.3V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V445.3C143.6 431.9 80.1 368.4 66.7 288H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H66.7C80.1 143.6 143.6 80.1 224 66.7V32c0-17.7 14.3-32 32-32zM128 256a128 128 0 1 0 256 0 128 128 0 1 0 -256 0zm128-80a80 80 0 1 1 0 160 80 80 0 1 1 0-160z"/></svg>
+			</span>
+			</div>
+			<div class="__lt-input-radius">
+				<label>
+					<span>Radius (km)</span>
+					<input type="number" min="1" name="radius" placeholder="10km" value="10">
+				</label>
+			</div>
+		</div>
+	<?php } ?>
 	<div class="__lt-filter-group">
 		<h4 class="__lt-filter-title">Barista Experience (Years)</h4>
 		<div class="__lt-range-slider">

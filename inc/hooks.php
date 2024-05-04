@@ -19,6 +19,11 @@ function lt_acf_json_load_point( $paths ) {
 	return $paths;
 }
 
+add_action( 'acf/init', 'lt_acf_init' );
+function lt_acf_init() {
+	acf_update_setting( 'google_api_key', 'AIzaSyAitFZqjWLqRCzMd8FLqbTjeQnDnVbWwYE' );
+}
+
 add_filter( "ocean_post_layout_class", "filter_ocean_post_layout_class" );
 function filter_ocean_post_layout_class( $class ) {
 	if ( is_singular( "barista" ) || is_singular( "job" ) ) {
@@ -69,8 +74,9 @@ function lt_ajax_filter_barista() {
 	$year_exp_max           = isset( $_POST['year_exp_max'] ) ? floatval( $_POST['year_exp_max'] ) : 10;
 	$year_exp_aus_min       = isset( $_POST['year_exp_aus_min'] ) ? floatval( $_POST['year_exp_aus_min'] ) : 0;
 	$year_exp_aus_max       = isset( $_POST['year_exp_aus_max'] ) ? floatval( $_POST['year_exp_aus_max'] ) : 10;
+	$layout = isset( $_POST['layout'] ) ? $_POST['layout'] : 'grid';
 
-	$query     = create_query_barista( $year_exp_min, $year_exp_max, $year_exp_aus_min, $year_exp_aus_max, $barista_skills, $volumes, $hospitality_skills );
+	$query        = create_query_barista( $layout, $year_exp_min, $year_exp_max, $year_exp_aus_min, $year_exp_aus_max, $barista_skills, $volumes, $hospitality_skills );
 	$not_found = '<div class="__lt-item item-not-found">Sorry, no barista matched your criteria.</div>';
 
 	function areAllElementsExistInArray( $list, $listCheck ) {
@@ -80,18 +86,22 @@ function lt_ajax_filter_barista() {
 	}
 
 	$i = 0;
+	$barista_data = [];
 	ob_start();
 	if ( $query->have_posts() ) {
 		while ( $query->have_posts() ) {
 			$query->the_post();
-			$certification = get_certification_by_barista( get_the_ID(), true );
+			$id            = get_the_ID();
+			$certification = get_certification_by_barista( $id, true );
 
 			if ( empty( $training_certification ) ) {
-				get_lt_item( get_the_ID() );
+				get_lt_item2( $id );
+				$barista_data[] = get_barista_map_item( $id );
 				$i ++;
 			} else {
 				if ( areAllElementsExistInArray( $certification, $training_certification ) ) {
-					get_lt_item( get_the_ID() );
+					get_lt_item2( $id );
+					$barista_data[] = get_barista_map_item( $id );
 					$i ++;
 				}
 			}
@@ -104,9 +114,10 @@ function lt_ajax_filter_barista() {
 	$items = ob_get_clean();
 	$items = empty( $items ) ? $not_found : $items;
 	wp_send_json( [
-		"items"       => $items,
+		"items"       => $layout === 'map' ? $barista_data : $items,
 		"count"       => $i,
-		"found_posts" => $query->found_posts
+		"found_posts" => $query->found_posts,
+		"query"       => $query
 	] );
 
 	wp_die();

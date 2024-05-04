@@ -8,13 +8,14 @@
 //}
 global $post;
 //current_user_can( 'barista' ) &&
-$is_author_can_edit = is_user_logged_in() && $post->post_author == get_current_user_id();
+$is_author_can_edit = is_user_logged_in() && (current_user_can( 'manage_options' )||$post->post_author == get_current_user_id());
 $is_edit_barista    = isset( $_GET['edit'] ) && $is_author_can_edit;
 $title              = "THANK YOU FOR SEEING MY PROFILE";
 if ( $is_edit_barista ) {
 	acf_form_head();
 	$title = "UPDATE PROFILE";
 }
+//var_dump(get_field('location'));
 get_header();
 
 do_action( 'ocean_before_content_wrap' );
@@ -69,7 +70,7 @@ lt_add_page_header( $title );
 									</div>
 									<div class="__info-wrap">
 										<div class="__info-left">
-											<div class="__name"><?= get_field( "full_name" ) ?></div>
+											<div class="__name"><?= get_field( "preferred_name" ) ?></div>
 											<?php
 											$certification = get_certification_by_barista( get_the_ID() );
 											if ( ! empty( $certification ) ) {
@@ -80,8 +81,8 @@ lt_add_page_header( $title );
 											?>
 										</div>
 										<div class="__info-right">
-											<?= $phone_number ? '<div class="__contact-item __tell"><a href="tel:' . $phone_number . '">' . $phone_number . '</a></div>' : '' ?>
-											<?= $email ? '<div class="__contact-item __email"><a href="mailto:' . $email . '">' . $email . '</a></div>' : '' ?>
+											<?= $phone_number ? '<div class="__contact-item __tell"><a href="tel:' . $phone_number . '">Call me</a></div>' : '' ?>
+											<?= $email ? '<div class="__contact-item __email"><a href="mailto:' . $email . '">Email me</a></div>' : '' ?>
 										</div>
 									</div>
 								</div>
@@ -100,10 +101,10 @@ lt_add_page_header( $title );
 												</div>
 											</div>
 										</div>
-										<?php if ( get_field( "preferred_name" ) ) { ?>
+										<?php if ( get_field( "full_name" ) ) { ?>
 											<div class="__ct-info-item __ct-preferred-name">
-												<h4>Preferred Name</h4>
-												<div><?= get_field( "preferred_name" ) ?></div>
+												<h4>Full Name</h4>
+												<div><?= get_field( "full_name" ) ?></div>
 											</div>
 										<?php } ?>
 										<div class="__ct-info-item __ct-year-exp">
