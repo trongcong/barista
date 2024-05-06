@@ -57,6 +57,32 @@ function get_barista_contacted( $postID, $metaKey = "barista_contacted" ) {
 	return get_barista_meta( $postID, $metaKey );
 }
 
+function get_volumes_mapping_data( $volumes = [] ) {
+	$volumes_attr = [
+		'Less than 3 kgs',
+		'More than 3 kgs',
+		'More than 4 kgs',
+		'More than 5 kgs',
+		'More than 6 kgs',
+		'More than 7 kgs',
+		'More than 8 kgs',
+	];
+	if ( in_array( $volumes_attr[6], $volumes ) ) {
+		return $volumes_attr;
+	} elseif ( in_array( $volumes_attr[5], $volumes ) ) {
+		return array_slice( $volumes_attr, 0, 6 );
+	} elseif ( in_array( $volumes_attr[4], $volumes ) ) {
+		return array_slice( $volumes_attr, 0, 5 );
+	} elseif ( in_array( $volumes_attr[3], $volumes ) ) {
+		return array_slice( $volumes_attr, 0, 4 );
+	} elseif ( in_array( $volumes_attr[2], $volumes ) ) {
+		return array_slice( $volumes_attr, 0, 3 );
+	} elseif ( in_array( $volumes_attr[1], $volumes ) ) {
+		return array_slice( $volumes_attr, 0, 2 );
+	} elseif ( in_array( $volumes_attr[0], $volumes ) ) {
+		return array_slice( $volumes_attr, 0, 1 );
+	}
+}
 /**
  * @param $layout
  * @param $year_exp_min
@@ -123,8 +149,9 @@ function create_query_barista( $layout = 'grid', $year_exp_min = 0, $year_exp_ma
 		$meta_query[] = $barista_skills_query;
 	}
 	if ( ! empty( $volumes ) ) {
+		$volumes_mapping = get_volumes_mapping_data( $volumes );
 		$volumes_query = array( 'relation' => 'OR' );
-		foreach ( $volumes as $item ) {
+		foreach ( $volumes_mapping as $item ) {
 			$volumes_query[] = array(
 				'key'     => 'volume_you_are_able_to_handle_solo',
 				'value'   => $item,

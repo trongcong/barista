@@ -116,8 +116,8 @@ function lt_ajax_filter_barista() {
 	wp_send_json( [
 		"items"       => $layout === 'map' ? $barista_data : $items,
 		"count"       => $i,
-		"found_posts" => $query->found_posts,
-		"query"       => $query
+//		"found_posts" => $query->found_posts,
+//		"query"       => $query
 	] );
 
 	wp_die();

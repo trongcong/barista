@@ -15,7 +15,6 @@ if ( $is_edit_barista ) {
 	acf_form_head();
 	$title = "UPDATE PROFILE";
 }
-//var_dump(get_field('location'));
 get_header();
 
 do_action( 'ocean_before_content_wrap' );
@@ -105,6 +104,22 @@ lt_add_page_header( $title );
 											<div class="__ct-info-item __ct-preferred-name">
 												<h4>Full Name</h4>
 												<div><?= get_field( "full_name" ) ?></div>
+											</div>
+										<?php } ?>
+										<?php if ( get_field( "locations" ) ) { ?>
+											<div class="__ct-info-item __ct-locations">
+												<h4>Locations</h4>
+												<div>
+													<?php
+													$locations = get_field( 'locations' );
+													if ( $locations ): ?>
+														<ul>
+															<?php foreach ( $locations as $location ): ?>
+																<li><?= $location['location']['address']; ?></li>
+															<?php endforeach; ?>
+														</ul>
+													<?php endif; ?>
+												</div>
 											</div>
 										<?php } ?>
 										<div class="__ct-info-item __ct-year-exp">
